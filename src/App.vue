@@ -37,7 +37,7 @@ export default {
       // xhr.send(); 
 
       try {
-        const url = new URL('https://google.com');
+        const url = new URL('/api/upload');
         // const url = new URL('https://inat-updater-test.azurewebsites.net/update');
         // url.searchParams.set('state', state);
         // url.searchParams.set('code1', code);
