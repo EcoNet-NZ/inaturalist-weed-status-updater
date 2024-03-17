@@ -3,6 +3,10 @@
 </template>
 
 <script>
+const params = new URLSearchParams(window.location.search);
+const paramValue = params.get('state');
+console.log('State is "' + state + '"');
+
 export default {
   name: "App",
   data() {
