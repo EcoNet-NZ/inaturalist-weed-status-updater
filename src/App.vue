@@ -27,7 +27,9 @@ export default {
         const url = new URL('https://inat-updater-test.azurewebsites.net/update');
         url.searchParams.set('state', state);
         url.searchParams.set('authCode', code);
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          mode: no-cors  // TODO add Access-Control-Allow-Origin to destination
+        });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
