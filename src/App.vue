@@ -1,5 +1,8 @@
 <template>
   <div>Hello {{ value }}</div>
+  <div>
+    <button @click="callAPI">Call API</button>
+  </div>
 </template>
 
 <script>
@@ -15,6 +18,22 @@ export default {
     return {
       value: "World"
     };
+  },
+  methods: {
+    async callAPI() {
+      try {
+        const response = await fetch('https://api.example.com/data');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log(data);
+        // Handle the API response data here
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        // Handle error if any
+      }
+    }
   }
 };
 </script>
