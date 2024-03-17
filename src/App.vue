@@ -27,8 +27,11 @@ export default {
         const url = new URL('https://inat-updater-test.azurewebsites.net/update');
         url.searchParams.set('state', state);
         url.searchParams.set('authCode', code);
+        console.log(url);
         const response = await fetch(url, {
-          mode: "no-cors"  // TODO add Access-Control-Allow-Origin to destination
+          mode: "no-cors",  // TODO add Access-Control-Allow-Origin to destination
+          credentials: "omit",
+          headers: {}
         });
         console.log(response);
         if (!response.ok) {
