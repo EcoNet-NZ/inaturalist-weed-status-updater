@@ -37,12 +37,12 @@ export default {
       // xhr.send(); 
 
       try {
-        // const url = new URL('/api/upload');
+        // const url = new URL('/api/uodate');
         // const url = new URL('https://inat-updater-test.azurewebsites.net/update');
         // url.searchParams.set('state', state);
         // url.searchParams.set('code1', code);
         // console.log(url);
-        const response = await fetch('/api/upload', {
+        const response = await fetch('/api/update', {
           // mode: "no-cors",  // TODO add Access-Control-Allow-Origin to destination
           // credentials: "omit",
           // headers: {}
