@@ -4,8 +4,10 @@
 
 <script>
 const params = new URLSearchParams(window.location.search);
-const paramValue = params.get('state');
-console.log('State is "' + paramValue + '"');
+const state = params.get('state');
+console.log('State is "' + state + '"');
+const code = params.get('code');
+console.log('Auth code is "' + code + '"');
 
 export default {
   name: "App",
