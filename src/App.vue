@@ -54,6 +54,8 @@ export default {
           console.log(response.ok);
           throw new Error('Network response was not ok');
         }
+        const text - await response.text();
+        console.log(text);
         // const data = await response.json();
         // console.log(data);
         // Handle the API response data here
