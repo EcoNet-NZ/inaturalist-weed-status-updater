@@ -33,12 +33,15 @@ export default {
           credentials: "omit",
           headers: {}
         });
-        console.log(response);
+        
         if (!response.ok) {
+          console.log(response);
+          console.log(response.status);
+          console.log(response.ok);
           throw new Error('Network response was not ok');
         }
-        const data = await response.json();
-        console.log(data);
+        // const data = await response.json();
+        // console.log(data);
         // Handle the API response data here
       } catch (error) {
         console.error('Error fetching data:', error);
