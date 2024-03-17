@@ -30,6 +30,7 @@ export default {
         const response = await fetch(url, {
           mode: "no-cors"  // TODO add Access-Control-Allow-Origin to destination
         });
+        console.log(response);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
