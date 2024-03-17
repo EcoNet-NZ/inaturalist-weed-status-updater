@@ -1,7 +1,9 @@
 <template>
-  <div>Hello {{ value }}</div>
   <div>
-    <button @click="callAPI">Call API</button>
+    <div>Hello {{ value }}</div>
+    <div>
+      <button @click="callAPI">Call API</button>
+    </div>
   </div>
 </template>
 
@@ -22,7 +24,10 @@ export default {
   methods: {
     async callAPI() {
       try {
-        const response = await fetch('https://api.example.com/data');
+        const url = new URL('https://inat-updater-test.azurewebsites.net/update');
+        url.searchParams.set('state', state);
+        url.searchParams.set('authCode', code);
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
