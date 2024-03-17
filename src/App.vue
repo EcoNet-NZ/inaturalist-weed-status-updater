@@ -41,11 +41,11 @@ export default {
         // const url = new URL('https://inat-updater-test.azurewebsites.net/update');
         // url.searchParams.set('state', state);
         // url.searchParams.set('code1', code);
-        console.log(url);
+        // console.log(url);
         const response = await fetch('/api/upload', {
-          mode: "no-cors",  // TODO add Access-Control-Allow-Origin to destination
-          credentials: "omit",
-          headers: {}
+          // mode: "no-cors",  // TODO add Access-Control-Allow-Origin to destination
+          // credentials: "omit",
+          // headers: {}
         });
         
         if (!response.ok) {
