@@ -22,15 +22,14 @@ def get_access_token(authorization_code):
     else:
         return None    
 
-@app.route(route="update", auth_level=func.AuthLevel.ANONYMOUS)
+@app.route(route="update")
 def update(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-
-    code = req.params.get('auth-code')
+    authorization_code = req.params.get('auth-code')
     observation_id = req.params.get('state')
 
-    if code:
+    if authorization_code:
         data = {
             "observation_field_value": {
                 "observation_id": observation_id,
@@ -38,7 +37,7 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
                 "value": "n/a"
             }
         }
-        api_call_headers = {'Authorization': 'Bearer ' + get_access_token(code)}
+        api_call_headers = {'Authorization': 'Bearer ' + get_access_token(authorization_code)}
         response = requests.post(CREATE_OFV_URL, json=data, headers=api_call_headers)
         return func.HttpResponse(f"Yay! The iNaturalist observation was updated {response}!")
     else:
