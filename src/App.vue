@@ -37,7 +37,7 @@ export default {
       // xhr.send(); 
 
       try {
-        const url = new URL('/api/uodate', window.location.href);
+        const url = new URL('/api/update', window.location.href);
         // const url = new URL('https://inat-updater-test.azurewebsites.net/update');
         url.searchParams.set('state', state);
         url.searchParams.set('auth-code', code);
