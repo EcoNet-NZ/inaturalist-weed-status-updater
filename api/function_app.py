@@ -2,43 +2,12 @@ import azure.functions as func
 import requests
 import logging
 import os
-from urllib.parse import urlencode
 
-AUTHORIZE_URL = 'https://www.inaturalist.org/oauth/authorize'
 TOKEN_URL = 'https://www.inaturalist.org/oauth/token'
 CREATE_OFV_URL = 'https://api.inaturalist.org/v1/observation_field_values'
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
-def get_authorization_code_url():
-    params = {
-        'client_id': os.environ["CLIENT_ID"],
-        'redirect_uri': os.environ["REDIRECT_URI"],
-        'response_type': 'code'
-    }
-    return AUTHORIZE_URL + '?' + urlencode(params)
-
-@app.route(route="http_trigger", auth_level=func.AuthLevel.ANONYMOUS)
-def whatever(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger function processed a request.')
-
-    name = req.params.get('name')
-    if not name:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            name = req_body.get('name')
-
-    if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully. Open {get_authorization_code_url()}")
-    else:
-        return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
-        )
-    
 def get_access_token(authorization_code):
     data = {
         'client_id': os.environ["CLIENT_ID"],
@@ -77,17 +46,3 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
              "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
              status_code=200
         )
-
-# @app.route(route="update_inaturalist")
-# def update_inaturalist(req: func.HttpRequest) -> func.HttpResponse:
-#     logging.info('Python update function processed a request.')
-
-#     code = req.params.get('code')
-
-#     if code:
-#         return func.HttpResponse(f"Hello, {code}. This HTTP triggered function executed successfully.")
-#     else:
-#         return func.HttpResponse(
-#              "This HTTP triggered function executed successfully. Pass a code in the query string for a personalized response.",
-#              status_code=401
-#         )    
