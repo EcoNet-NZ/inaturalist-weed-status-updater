@@ -58,7 +58,7 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
 
-    code = req.params.get('code1')
+    code = req.params.get('auth-code')
 
     if code:
         data = {
@@ -70,7 +70,7 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
         }
         api_call_headers = {'Authorization': 'Bearer ' + get_access_token(code)}
         response = requests.post(CREATE_OFV_URL, json=data, headers=api_call_headers)
-        return func.HttpResponse(f"Hello, {response}!")
+        return func.HttpResponse(f"Yay! The iNaturalist observation was updated {response}!")
     else:
         return func.HttpResponse(
              "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",

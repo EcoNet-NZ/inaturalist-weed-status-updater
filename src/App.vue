@@ -40,7 +40,7 @@ export default {
         const url = new URL('/api/uodate');
         // const url = new URL('https://inat-updater-test.azurewebsites.net/update');
         url.searchParams.set('state', state);
-        url.searchParams.set('code1', code);
+        url.searchParams.set('auth-code', code);
         console.log(url);
         const response = await fetch(url);
         // const response = await fetch('/api/update', {
