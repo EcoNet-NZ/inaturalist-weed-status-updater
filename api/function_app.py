@@ -59,11 +59,12 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
 
 
     code = req.params.get('auth-code')
+    observation_id = req.params.get('state')
 
     if code:
         data = {
             "observation_field_value": {
-                "observation_id": 201316270,
+                "observation_id": observation_id,
                 "observation_field_id": 42,
                 "value": "n/a"
             }
