@@ -42,7 +42,10 @@ export default {
         url.searchParams.set('state', state);
         url.searchParams.set('auth-code', code);
         console.log(url);
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            method: "POST"
+          }
+        );
         // const response = await fetch('/api/update', {
           // mode: "no-cors",  // TODO add Access-Control-Allow-Origin to destination
           // credentials: "omit",
