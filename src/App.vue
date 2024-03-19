@@ -1,10 +1,10 @@
 <script setup>
-  import { ref } from 'vue'
+  // import { ref } from 'vue'
 
-  const params = new URLSearchParams(window.location.search)
-  const observationId = ref(params.get('state'))
-  console.log('Observation id is "' + observationId.value + '"')
-  const iNaturalistUrl = 'https://inaturalist.nz/observations/' + observationId.value
+  // const params = new URLSearchParams(window.location.search)
+  // const observationId = ref(params.get('state'))
+  // console.log('Observation id is "' + observationId.value + '"')
+  // const iNaturalistUrl = 'https://inaturalist.nz/observations/' + observationId.value
 </script>
 
 <template>
@@ -17,53 +17,33 @@
 
 <script>
 export default {
-  props: {
-    msg: String,
-  },
+  name: 'App',
+  // props: {
+  //   msg: String,
+  // },
   data() {
     return {
       message: "",
+      observationId: "",
+      // code: "",
+      iNaturalistUrl: ""
     };
   },
   methods: {
-  //   fetchData() {
-  //     fetch('https://facts-by-api-ninjas.p.rapidapi.com/v1/facts', {
-  //       method: "GET",
-  //       headers: {
-  //         "X-RapidAPI-Key": 'your-api-key',
-  //         "X-RapidAPI-Host": 'facts-by-api-ninjas.p.rapidapi.com',
-  //       },
-  //     })
-  //       .then((response) => {
-  //         response.json().then((data) => {
-  //           this.fact = data[0].fact;
-  //         });
-  //       })
-  //       .catch((err) => {
-  //         console.error(err);
-  //       });
-  //   },
-  // },
-// };
-
-
-
-
-
-// export default {
-//   name: 'App',
-//   methods: {
     async updateObservation() {
 
       const params = new URLSearchParams(window.location.search)
-      const observationId = params.get('state')
+      this.observationId = params.get('state')
       const code = params.get('code')
+      console.log('Observation id is "' + this.observationId + '"')
+      this.iNaturalistUrl = 'https://inaturalist.nz/observations/' + this.observationId
+
       // const message = ref('')
 
       try {
         const url = new URL('/api/update', window.location.href)
         url.searchParams.set('auth-code', code)
-        url.searchParams.set('state', observationId)
+        url.searchParams.set('state', this.observationId)
         console.log(url)
         const response = await fetch(url, {
             method: "POST"
@@ -79,11 +59,12 @@ export default {
         const text = await response.text()
         console.log(text)
         
-        this.message = "Success! iNaturalist observation has been updated. CAMS will be updated within an hour."
+        this.message = "Success!! iNaturalist observation has been updated. The updates will be synchronised to CAMS within an hour."
         // const data = await response.json()
         // console.log(data)
         // Handle the API response data here
       } catch (error) {
+        this.message = "Error updating observation, please report to support@econet.nz. " + error
         console.error('Error fetching data:', error)
         // Handle error if any
       }
