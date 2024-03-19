@@ -1,3 +1,6 @@
+<script setup>
+</script>
+
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
   <HelloWorld msg="Welcome to Your Vue.js App"/>
@@ -9,11 +12,12 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import { ref } from 'vue'
 
+const observationId = ref('');
 const params = new URLSearchParams(window.location.search);
-// const observationId = ref('');
-// observationId.value = params.get('state'); 
-const observationId = params.get('state'); 
+observationId.value = params.get('state'); 
+// const observationId = params.get('state'); 
 console.log('Observation id is "' + observationId.value + '"');
 const code = params.get('code');
 console.log('Auth code is "' + code + '"');
@@ -28,7 +32,7 @@ export default {
 
       try {
         const url = new URL('/api/update', window.location.href)
-        url.searchParams.set('state', observationId)
+        url.searchParams.set('state', observationId.value)
         url.searchParams.set('auth-code', code)
         console.log(url)
         const response = await fetch(url, {
