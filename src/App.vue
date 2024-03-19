@@ -9,7 +9,7 @@
 </script>
 
 <template>
-  <div><span>Hello </span><span>{{ observationId }}</span></div>
+  <div>Updating iNaturalist observation <a href="https://inaturalist.nz/observations/{{ observationId }}">{{ observationId }}</a></div>
     <div>
       <button @click="callAPI">Call API</button>
     </div>
