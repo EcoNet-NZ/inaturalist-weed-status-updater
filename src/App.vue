@@ -1,12 +1,4 @@
 <script setup>
-import { ref } from 'vue'
-
-const params = new URLSearchParams(window.location.search);
-const observationId = ref('');
-observationId.value = params.get('state'); 
-console.log('Observation id is "' + observationId.value + '"');
-const code = params.get('code');
-console.log('Auth code is "' + code + '"');
 </script>
 
 <template>
@@ -19,6 +11,15 @@ console.log('Auth code is "' + code + '"');
 </template>
 
 <script>
+import { ref } from 'vue'
+
+const params = new URLSearchParams(window.location.search);
+const observationId = ref('');
+observationId.value = params.get('state'); 
+console.log('Observation id is "' + observationId.value + '"');
+const code = params.get('code');
+console.log('Auth code is "' + code + '"');
+
 export default {
   name: "App",
   data() {
