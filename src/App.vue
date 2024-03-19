@@ -1,10 +1,19 @@
 <script setup>
+  import { ref } from 'vue'
+
+  const observationId = ref('');
+  const params = new URLSearchParams(window.location.search);
+  observationId.value = params.get('state'); 
+  // const observationId = params.get('state'); 
+  console.log('Observation id is "' + observationId.value + '"');
+  const code = params.get('code');
+  console.log('Auth code is "' + code + '"');
 </script>
 
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
   <HelloWorld msg="Welcome to Your Vue.js App"/>
-  <div>Hello {{ observationId }}</div>
+  <div><span>Hello </span><span>{{ observationId }}</span></div>
     <div>
       <button @click="callAPI">Call API</button>
     </div>
@@ -12,15 +21,6 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
-import { ref } from 'vue'
-
-const observationId = ref('');
-const params = new URLSearchParams(window.location.search);
-observationId.value = params.get('state'); 
-// const observationId = params.get('state'); 
-console.log('Observation id is "' + observationId.value + '"');
-const code = params.get('code');
-console.log('Auth code is "' + code + '"');
 
 export default {
   name: 'App',
@@ -32,8 +32,8 @@ export default {
 
       try {
         const url = new URL('/api/update', window.location.href)
-        url.searchParams.set('state', observationId.value)
-        url.searchParams.set('auth-code', code)
+        url.searchParams.set('state', this.observationId.value)
+        url.searchParams.set('auth-code', this.code)
         console.log(url)
         const response = await fetch(url, {
             method: "POST"
