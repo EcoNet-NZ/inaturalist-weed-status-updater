@@ -14,8 +14,9 @@
 import { ref } from 'vue'
 
 const params = new URLSearchParams(window.location.search);
-const observationId = ref('');
-observationId.value = params.get('state'); 
+// const observationId = ref('');
+// observationId.value = params.get('state'); 
+const observationId = params.get('state'); 
 console.log('Observation id is "' + observationId.value + '"');
 const code = params.get('code');
 console.log('Auth code is "' + code + '"');
