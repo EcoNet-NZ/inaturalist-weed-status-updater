@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>Hello {{ value }}</div>
+    <div>Hello {{ observationId }}</div>
     <div>
       <button @click="callAPI">Call API</button>
     </div>
@@ -9,8 +9,8 @@
 
 <script>
 const params = new URLSearchParams(window.location.search);
-const state = params.get('state');
-console.log('State is "' + state + '"');
+const observationId = params.get('state');
+console.log('Observation id is "' + observationId + '"');
 const code = params.get('code');
 console.log('Auth code is "' + code + '"');
 
@@ -24,33 +24,15 @@ export default {
   methods: {
     async callAPI() {
 
-      // const xhr = new XMLHttpRequest();
- 
-      // xhr.open('GET', 'https://inat-updater-test.azurewebsites.net/update?state=12344&code2=X');
-      
-      // xhr.onreadystatechange = function() {
-      //   if(xhr.readyState === 4 && xhr.status === 200) {
-      //     console.log(xhr.responseText);
-      //   }
-      // }
-      
-      // xhr.send(); 
-
       try {
         const url = new URL('/api/update', window.location.href);
-        // const url = new URL('https://inat-updater-test.azurewebsites.net/update');
-        url.searchParams.set('state', state);
+        url.searchParams.set('state', observationId);
         url.searchParams.set('auth-code', code);
         console.log(url);
         const response = await fetch(url, {
             method: "POST"
           }
         );
-        // const response = await fetch('/api/update', {
-          // mode: "no-cors",  // TODO add Access-Control-Allow-Origin to destination
-          // credentials: "omit",
-          // headers: {}
-        // });
         
         if (!response.ok) {
           console.log(response);
