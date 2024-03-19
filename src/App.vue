@@ -1,23 +1,13 @@
 <script setup>
-  // import { ref } from 'vue'
-
-  // const params = new URLSearchParams(window.location.search)
-  // const observationId = ref(params.get('state'))
-  // console.log('Observation id is "' + observationId.value + '"')
-  // const iNaturalistUrl = 'https://inaturalist.nz/observations/' + observationId.value
+import ObservationUpdater from './components/ObservationUpdater.vue'
 </script>
 
 <template>
   <p>Updating iNaturalist observation <a :href="iNaturalistUrl">{{ observationId }}</a></p>
-  <div>
-    <button @click="updateObservation">Update observation</button>
-  </div>
-  <p v-if="message">{{ message }}</p>
+  <ObservationUpdater :observation-id="observationId" :code="code"></ObservationUpdater>
 </template>
 
 <script>
-import { ref } from 'vue'
-
 export default {
   name: 'App',
   // props: {
@@ -26,28 +16,31 @@ export default {
   data() {
     return {
       message: "",
-      // observationId: "",
-      // code: "",
-      // iNaturalistUrl: ""
+      observationId: "",
+      iNaturalistUrl: ""
     };
   },
-  setup() {
+  created: function() {
     const params = new URLSearchParams(window.location.search)
-    const observationId = ref(params.get('state'))
-    const code = ref(params.get('code'))
-    console.log('Observation id is "' + observationId.value + '"')
-    const iNaturalistUrl = ref('https://inaturalist.nz/observations/' + observationId.value)
-    return {
-      observationId, 
-      code, 
-      iNaturalistUrl
-    }
+      this.observationId = params.get('state')
+      this.code = params.get('code')
+      console.log('Observation id is "' + this.observationId + '"')
+      this.iNaturalistUrl = 'https://inaturalist.nz/observations/' + this.observationId
   },
   methods: {
     async updateObservation() {
+
+      const params = new URLSearchParams(window.location.search)
+      this.observationId = params.get('state')
+      const code = params.get('code')
+      console.log('Observation id is "' + this.observationId + '"')
+      this.iNaturalistUrl = 'https://inaturalist.nz/observations/' + this.observationId
+
+      // const message = ref('')
+
       try {
         const url = new URL('/api/update', window.location.href)
-        url.searchParams.set('auth-code', this.code)
+        url.searchParams.set('auth-code', code)
         url.searchParams.set('state', this.observationId)
         console.log(url)
         const response = await fetch(url, {
