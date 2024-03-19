@@ -1,18 +1,14 @@
 <script setup>
   import { ref } from 'vue'
 
-  const observationId = ref('');
   const params = new URLSearchParams(window.location.search);
-  observationId.value = params.get('state'); 
-  // const observationId = params.get('state'); 
+  const observationId = ref(params.get('state'));
   console.log('Observation id is "' + observationId.value + '"');
   const code = params.get('code');
   console.log('Auth code is "' + code + '"');
 </script>
 
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
   <div><span>Hello </span><span>{{ observationId }}</span></div>
     <div>
       <button @click="callAPI">Call API</button>
@@ -20,13 +16,8 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  },
   methods: {
     async callAPI() {
 
