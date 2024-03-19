@@ -26,8 +26,8 @@ export default {
 
       try {
         const url = new URL('/api/update', window.location.href)
-        url.searchParams.set('state', this.observationId.value)
         url.searchParams.set('auth-code', this.code)
+        url.searchParams.set('state', this.observationId.value)
         console.log(url)
         const response = await fetch(url, {
             method: "POST"
@@ -65,3 +65,4 @@ export default {
   margin-top: 60px;
 }
 </style>
+
