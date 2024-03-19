@@ -1,18 +1,21 @@
 <script setup>
   import { ref } from 'vue'
 
-  const params = new URLSearchParams(window.location.search);
-  const observationId = ref(params.get('state'));
-  console.log('Observation id is "' + observationId.value + '"');
-  const code = params.get('code');
-  console.log('Auth code is "' + code + '"');
+  const params = new URLSearchParams(window.location.search)
+  const observationId = ref(params.get('state'))
+  console.log('Observation id is "' + observationId.value + '"')
+  const code = params.get('code')
+  console.log('Auth code is "' + code + '"')
+  const iNaturalistUrl = 'https://inaturalist.nz/observations/' + observationId.value
+  const message = ref('')
 </script>
 
 <template>
-  <div>Updating iNaturalist observation <a :href="'https://inaturalist.nz/observations/' + { observationId }">{{ observationId }}</a></div>
-    <div>
-      <button @click="callAPI">Call API</button>
-    </div>
+  <div>Updating iNaturalist observation <a :href="iNaturalistUrl">{{ observationId }}</a></div>
+  <div>
+    <button @click="callAPI">Call API</button>
+  </div>
+  <div>{{ message }}</div>
 </template>
 
 <script>
@@ -39,6 +42,7 @@ export default {
         }
         const text = await response.text()
         console.log(text)
+        this.message.value = "Success! iNaturalist observation has been updated. CAMS will be updated within an hour."
         // const data = await response.json()
         // console.log(data)
         // Handle the API response data here
