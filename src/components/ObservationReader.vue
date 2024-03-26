@@ -1,24 +1,27 @@
 <template>
   <div>
-    <button @click="updateObservation">Update observation</button>
+    <label for="areaInput">Area m2:</label>
+    <input type="number" id="areaInput" v-model="area_m2">
   </div>
-  <p v-if="message">{{ message }}</p>
 </template>
 
 <script>
+// var jmespath = require('jmespath');
+
 export default {
-  name: 'ObservationUpdater',
+  name: 'ObservationReader',
   props: {
-    observationId: String,
-    code: String
+    observationId: String
   },
   data() {
     return {
+      area_m2: "",
       message: ""
       // observationId: "",
       // iNaturalistUrl: ""
     };
   },
+  created: async function() {
   // created: async function() {
   //   try {
   //       const url = new URL('/api/update', window.location.href)
@@ -49,8 +52,8 @@ export default {
   //       // Handle error if any
   //     }
   // }
-  methods: {
-    async updateObservation() {
+  // methods: {
+  //   async getObservation() {
 
       // const params = new URLSearchParams(window.location.search)
       // this.observationId = params.get('state')
@@ -61,14 +64,9 @@ export default {
       // const message = ref('')
 
       try {
-        const url = new URL('/api/update', window.location.href)
-        url.searchParams.set('auth-code', this.code)
-        url.searchParams.set('state', btoa(this.observationId))
+        const url = new URL('https://api.inaturalist.org/v1/observations/' + this.observationId)
         console.log(url)
-        const response = await fetch(url, {
-            method: "POST"
-          }
-        )
+        const response = await fetch(url)
         
         if (!response.ok) {
           console.log(response)
@@ -76,8 +74,12 @@ export default {
           console.log(response.ok)
           throw new Error('Network response was not ok')
         }
-        const text = await response.text()
-        console.log(text)
+        const json = await response.json()
+        console.log(json)
+        // const value = jmespath.search(json, "results[0][?field_id=1759].value")
+        // console.log(value)
+        console.log (json.results[0].ofvs.filter(ofv => ofv.field_id === 12414)[0].value)
+        this.area_m2 = json.results[0].ofvs.filter(ofv => ofv.field_id === 12414)[0].value
         
         this.message = "Success!! iNaturalist observation has been updated. The updates will be synchronised to CAMS within an hour."
         // const data = await response.json()
@@ -88,7 +90,7 @@ export default {
         console.error('Error fetching data:', error)
         // Handle error if any
       }
-    }
+    // }
   }
 }
 </script>

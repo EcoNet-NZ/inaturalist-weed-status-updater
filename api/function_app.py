@@ -2,6 +2,7 @@ import azure.functions as func
 import requests
 import logging
 import os
+import base64
 
 TOKEN_URL = 'https://www.inaturalist.org/oauth/token'
 CREATE_OFV_URL = 'https://api.inaturalist.org/v1/observation_field_values'
@@ -27,7 +28,7 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
     authorization_code = req.params.get('auth-code')
-    observation_id = req.params.get('state')
+    observation_id = base64.b64decode(req.params.get('state'))
 
     if authorization_code:
         data = {
