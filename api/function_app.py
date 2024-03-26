@@ -29,7 +29,11 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
 
     authorization_code = req.params.get('auth-code')
 <<<<<<< HEAD
+<<<<<<< HEAD
     observation_id = base64.b64decode(req.params.get('state')).decode()
+=======
+    observation_id = base64.b64decode(req.params.get('state'))
+>>>>>>> dd8de9d (Added reader. Base64 encode state)
 =======
     observation_id = base64.b64decode(req.params.get('state'))
 >>>>>>> dd8de9d (Added reader. Base64 encode state)
