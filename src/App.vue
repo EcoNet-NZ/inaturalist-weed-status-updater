@@ -1,9 +1,13 @@
 <script setup>
 import ObservationUpdater from './components/ObservationUpdater.vue'
+import ObservationReader from './components/ObservationReader.vue'
 </script>
 
 <template>
   <p>Updating iNaturalist observation <a :href="iNaturalistUrl">{{ observationId }}</a></p>
+  <ObservationReader :observation-id="observationId"></ObservationReader>
+  <!-- <label for="areaInput">Area m2:</label>
+    <input type="number" id="areaInput" v-model="areaValue"> -->
   <ObservationUpdater :observation-id="observationId" :code="code"></ObservationUpdater>
 </template>
 
@@ -16,6 +20,11 @@ export default {
       this.code = params.get('code')
       console.log('Observation id is "' + this.observationId + '"')
       this.iNaturalistUrl = 'https://inaturalist.nz/observations/' + this.observationId
+  },
+  data() {
+    return {
+      areaValue: 0,
+    }
   }
 }
 </script>
