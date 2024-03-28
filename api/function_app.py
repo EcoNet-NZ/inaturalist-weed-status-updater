@@ -29,6 +29,8 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
 
     authorization_code = req.params.get('auth-code')
     observation_id = base64.b64decode(req.params.get('state')).decode()
+    body = req.get_body()
+    logging.info('Body: ' + body)
 
     if authorization_code:
         data = {
