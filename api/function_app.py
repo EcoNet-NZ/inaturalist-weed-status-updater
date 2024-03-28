@@ -30,7 +30,7 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
     authorization_code = req.params.get('auth-code')
     observation_id = req.params.get('state')
     # observation_id = base64.b64decode(req.params.get('state')).decode()
-    # body = req.get_body().decode()
+    body = req.get_body().decode()
     # logging.info('Body: ' + body)
     # try:
     #     fields = json.loads(body)
