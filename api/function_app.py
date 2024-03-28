@@ -30,14 +30,14 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
     authorization_code = req.params.get('auth-code')
     observation_id = req.params.get('state')
     # observation_id = base64.b64decode(req.params.get('state')).decode()
-    body = req.get_body()
+    body = req.get_body().decode()
     logging.info('Body: ' + body)
     try:
         fields = json.loads(body)
         logging.info("Fields: " + fields)
         new_observation_id = fields['observationId']
     except:
-        return func.HttpResponse('Unable to get observation id', 502)
+        return func.HttpResponse('Unable to get observation id', 502)   
     # observation_id = body
 
     try:
@@ -64,7 +64,7 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
             return func.HttpResponse(e, 501)
         except Exception as e:
             logging.error(e)
-            return func.HttpResponse(e, 500)
+            return func.HttpResponse(e, 504)
     else:
         return func.HttpResponse(
              "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
