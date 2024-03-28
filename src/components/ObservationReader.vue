@@ -133,7 +133,7 @@ export default {
         // console.log(data)
         // Handle the API response data here
       } catch (error) {
-        this.message = "Error updating observation, please report to support@econet.nz. " + error
+        this.message = "Error reading observation, please report to support@econet.nz. " + error
         console.error('Error fetching data:', error)
         // Handle error if any
       }
