@@ -31,10 +31,10 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
     observation_id = req.params.get('state')
     # observation_id = base64.b64decode(req.params.get('state')).decode()
     body = req.get_body().decode()
-    # logging.info('Body: ' + body)
+    logging.info('Body: ' + body)
     # try:
-    #     fields = json.loads(body)
-    #     logging.info("Fields: " + fields)
+    fields = json.loads(body)
+    logging.info("Fields: " + fields)
     #     new_observation_id = fields['observationId']
     # except:
     #     return func.HttpResponse('Unable to get observation id', 502)   
