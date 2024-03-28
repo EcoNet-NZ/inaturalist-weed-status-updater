@@ -30,7 +30,8 @@ export default {
         url.searchParams.set('state', this.observationId)
         console.log(url)
         const response = await fetch(url, {
-            method: "POST"
+            method: "POST",
+            body: this.observationId
           }
         )
         
