@@ -145,15 +145,15 @@ export default {
         const url = new URL('/api/update', window.location.href)
         url.searchParams.set('auth-code', this.code)
         url.searchParams.set('state', this.observationId)
-        const jsonBody = JSON.stringify(this.observationId)
+        const jsonBody = JSON.stringify({observationId: this.observationId})
         console.log(url)
         console.log('Sending body ' + jsonBody)
         const response = await fetch(url, {
             method: "POST",
-            // headers: {
+            headers: {
             //   'Accept': 'application/json',
-            //   'Content-Type': 'application/json'
-            // },
+              'Content-Type': 'application/json'
+            },
             body: jsonBody
           }
         )
