@@ -150,10 +150,10 @@ export default {
         console.log('Sending body ' + jsonBody)
         const response = await fetch(url, {
             method: "POST",
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
+            // headers: {
+            //   'Accept': 'application/json',
+            //   'Content-Type': 'application/json'
+            // },
             body: jsonBody
           }
         )
