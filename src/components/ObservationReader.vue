@@ -22,10 +22,6 @@ import AlertBox from './AlertBox';
       <label for="areaInput" class="font-medium text-900 w-6rem">Area (m²):</label>
       <input type="number" id="areaInput" v-model="area_m2" class="p-3 border-1 border-300 border-round w-full">
     </div>
-    <div v-if="controlled || alive" class="flex align-items-center gap-2">
-      <label for="areaInput" class="font-medium text-900 w-6rem">Area (m²):</label>
-      <input type="number" id="areaInput" v-model="area_m2" class="p-3 border-1 border-300 border-round w-full">
-    </div>
     <div v-if="dead" class="flex align-items-center gap-2">
       <p>No further details needed. Press button below to update.</p>
     </div>
@@ -149,9 +145,16 @@ export default {
         const url = new URL('/api/update', window.location.href)
         url.searchParams.set('auth-code', this.code)
         url.searchParams.set('state', btoa(this.observationId))
+        const jsonBody = JSON.stringify(this.observationId)
         console.log(url)
+        console.log('Sending body ' + jsonBody)
         const response = await fetch(url, {
-            method: "POST"
+            method: "POST",
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: jsonBody
           }
         )
         

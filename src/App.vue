@@ -1,5 +1,5 @@
 <script setup>
-// import ObservationUpdater from './components/ObservationUpdater.vue'
+import ObservationUpdater from './components/ObservationUpdater.vue'
 import ObservationReader from './components/ObservationReader.vue'
 // import InputText from 'primevue/inputtext';
 // import Button from 'primevue/button';
@@ -42,7 +42,7 @@ import TabPanel from 'primevue/tabpanel';
                 <label for="password" class="font-medium text-900 w-6rem">Password</label>
                 <InputText id="password" v-model="password" type="password" class="p-3 border-1 border-300 border-round w-full" />
               </div> -->
-              <!-- <ObservationUpdater :observation-id="observationId" :code="code"></ObservationUpdater> -->
+              <ObservationUpdater :observation-id="observationId" :code="code"></ObservationUpdater>
             </div>
 
           </TabPanel>
@@ -54,7 +54,7 @@ import TabPanel from 'primevue/tabpanel';
           </TabPanel>
           <TabPanel header="Dead / No Control Needed">
               <ObservationReader :dead=true :observation-id="observationId" :code="code"></ObservationReader>
-              <!-- <ObservationUpdater :observation-id="observationId" :code="code"></ObservationUpdater> -->
+              <ObservationUpdater :observation-id="observationId" :code="code"></ObservationUpdater>
             <!-- </div> -->
           </TabPanel>
         </TabView>

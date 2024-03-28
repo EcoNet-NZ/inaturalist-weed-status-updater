@@ -3,7 +3,7 @@ import Button from 'primevue/button';
 </script>
 
 <template>
-    <Button @click="updateObservation" label="Update Observation" class="p-3 border-1 border-300 border-round bg-primary text-white font-medium" />
+    <Button @click="updateObservation" label="Update the Observation" class="p-3 border-1 border-300 border-round bg-primary text-white font-medium" />
 <!-- 
     <Button @click="updateObservation">Update observation</button> -->
   <p v-if="message">{{ message }}</p>
