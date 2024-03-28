@@ -1,15 +1,26 @@
 <script setup>
 import Button from 'primevue/button';
+import Dropdown from 'primevue/dropdown';
 import AlertBox from './AlertBox';
+
 </script>
 
 <template>
                 <!-- <label for="name" class="font-medium text-900 w-6rem">Name</label>
                 <InputText id="name" v-model="name" class="p-3 border-1 border-300 border-round w-full" /> -->
 
+    <div v-if="controlled" class="flex align-items-center gap-2">
+      <label for="howTreated" class="font-medium text-900 w-6rem">Control Method</label>
+      <Dropdown v-model="howTreated" :options="controlMethods" optionLabel="name" optionValue="code" class="p-2 border-1 border-300 border-round w-full" :virtualScrollerOptions="{ itemSize: 24 }" />
+    </div>
+
     <div v-if="controlled || alive" class="flex align-items-center gap-2">
       <label for="locationDetails" class="font-medium text-900 w-6rem">Location Details:</label>
       <input type="text" id="locationDetails" v-model="location_details" class="p-3 border-1 border-300 border-round w-full">
+    </div>
+    <div v-if="controlled || alive" class="flex align-items-center gap-2">
+      <label for="areaInput" class="font-medium text-900 w-6rem">Area (m²):</label>
+      <input type="number" id="areaInput" v-model="area_m2" class="p-3 border-1 border-300 border-round w-full">
     </div>
     <div v-if="controlled || alive" class="flex align-items-center gap-2">
       <label for="areaInput" class="font-medium text-900 w-6rem">Area (m²):</label>
@@ -41,7 +52,18 @@ export default {
     return {
       area_m2: "",
       location_details: "",
-      message: ""
+      message: "",
+      howTreated: "",
+      controlMethods: [
+        { name: 'Cut and paste', code: 'Cut and paint' },
+        { name: 'Drill and fill', code: 'Drill and fill' },
+        { name: 'Scrape and paste', code: 'Scrape stem and paste' },
+        { name: 'Pulled or dug', code: 'Pulled or dug' },
+        { name: 'Ringbark', code: 'Ringbark' },
+        { name: 'Spray leaves', code: 'Spray leaves' },
+        { name: 'Cut but roots remain', code: 'Cut but roots remain' },
+        { name: "Don't know", code: "Don't know" },
+      ]
       // observationId: "",
       // iNaturalistUrl: ""
     };
