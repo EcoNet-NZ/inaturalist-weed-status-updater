@@ -158,14 +158,15 @@ export default {
           }
         )
         
+        const text = await response.text()
+        console.log(text)
+
         if (!response.ok) {
           console.log(response)
           console.log(response.status)
           console.log(response.ok)
           throw new Error('Network response was not ok')
         }
-        const text = await response.text()
-        console.log(text)
         
         this.message = "Success!! iNaturalist observation has been updated. The updates will be synchronised to CAMS within an hour."
       } catch (error) {

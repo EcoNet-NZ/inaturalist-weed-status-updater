@@ -32,10 +32,18 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
     # observation_id = base64.b64decode(req.params.get('state')).decode()
     body = req.get_body()
     logging.info('Body: ' + body)
-    fields = json.loads(body)
-    logging.info("Fields: " + fields)
-    observation_id = fields['observationId']
+    try:
+        fields = json.loads(body)
+        logging.info("Fields: " + fields)
+        new_observation_id = fields['observationId']
+    except:
+        return func.HttpResponse('Unable to get observation id', 502)
     # observation_id = body
+
+    try:
+        assert observation_id == new_observation_id
+    except:
+        return func.HttpResponse(f'observation ids dont match {observation_id} {new_observation_id}', 503)
 
     if authorization_code:
         data = {
@@ -53,7 +61,7 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
             return func.HttpResponse(f"Yay! The iNaturalist observation was updated {response}!")
         except requests.exceptions.RequestException as e:
             logging.error(e)
-            return func.HttpResponse(e, 500)
+            return func.HttpResponse(e, 501)
         except Exception as e:
             logging.error(e)
             return func.HttpResponse(e, 500)
