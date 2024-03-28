@@ -1,4 +1,4 @@
-# wmanz-updater
+# epv
 
 ## Project setup
 ```

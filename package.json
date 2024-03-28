@@ -1,5 +1,5 @@
 {
-  "name": "weed-status-updater",
+  "name": "epv",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "primeflex": "^3.3.1",
+    "primevue": "^3.50.0",
     "vue": "^3.2.13"
   },
   "devDependencies": {

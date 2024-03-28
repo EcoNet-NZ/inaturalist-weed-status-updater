@@ -1,8 +1,29 @@
+<script setup>
+import Button from 'primevue/button';
+import AlertBox from './AlertBox';
+</script>
+
 <template>
-  <div>
-    <label for="areaInput">Area m2:</label>
-    <input type="number" id="areaInput" v-model="area_m2">
-  </div>
+                <!-- <label for="name" class="font-medium text-900 w-6rem">Name</label>
+                <InputText id="name" v-model="name" class="p-3 border-1 border-300 border-round w-full" /> -->
+
+    <div v-if="controlled || alive" class="flex align-items-center gap-2">
+      <label for="locationDetails" class="font-medium text-900 w-6rem">Location Details:</label>
+      <input type="text" id="locationDetails" v-model="location_details" class="p-3 border-1 border-300 border-round w-full">
+    </div>
+    <div v-if="controlled || alive" class="flex align-items-center gap-2">
+      <label for="areaInput" class="font-medium text-900 w-6rem">Area (m²):</label>
+      <input type="number" id="areaInput" v-model="area_m2" class="p-3 border-1 border-300 border-round w-full">
+    </div>
+    <div v-if="dead" class="flex align-items-center gap-2">
+      <p>No further details needed. Press button below to update.</p>
+    </div>
+    <div class="flex flex-column gap-3">
+      <Button @click="updateObservation" label="Update Observation" class="p-3 border-1 border-300 border-round bg-primary text-white font-medium" />
+    </div>
+    <div v-if="message" class="flex flex-column gap-3">
+      <AlertBox>{{ message }}</AlertBox>
+    </div>
 </template>
 
 <script>
@@ -11,11 +32,15 @@
 export default {
   name: 'ObservationReader',
   props: {
-    observationId: String
+    observationId: String,
+    controlled: Boolean,
+    alive: Boolean,
+    dead: Boolean
   },
   data() {
     return {
       area_m2: "",
+      location_details: "",
       message: ""
       // observationId: "",
       // iNaturalistUrl: ""
@@ -78,10 +103,13 @@ export default {
         console.log(json)
         // const value = jmespath.search(json, "results[0][?field_id=1759].value")
         // console.log(value)
-        console.log (json.results[0].ofvs.filter(ofv => ofv.field_id === 12414)[0].value)
-        this.area_m2 = json.results[0].ofvs.filter(ofv => ofv.field_id === 12414)[0].value
         
-        this.message = "Success!! iNaturalist observation has been updated. The updates will be synchronised to CAMS within an hour."
+        console.log (json.results[0].ofvs.filter(ofv => ofv.field_id === 12414)[0].value)
+        var ofvs = json.results[0].ofvs
+        this.area_m2 = ofvs.filter(ofv => ofv.field_id === 12414)[0].value
+        this.location_details = ofvs.filter(ofv => ofv.field_id === 5453)[0].value
+        
+        // this.message = "Success!! iNaturalist observation has been updated. The updates will be synchronised to CAMS within an hour."
         // const data = await response.json()
         // console.log(data)
         // Handle the API response data here
@@ -90,7 +118,35 @@ export default {
         console.error('Error fetching data:', error)
         // Handle error if any
       }
+    },
+    methods: {      
     // }
+    async updateObservation() {
+      try {
+        const url = new URL('/api/update', window.location.href)
+        url.searchParams.set('auth-code', this.code)
+        url.searchParams.set('state', btoa(this.observationId))
+        console.log(url)
+        const response = await fetch(url, {
+            method: "POST"
+          }
+        )
+        
+        if (!response.ok) {
+          console.log(response)
+          console.log(response.status)
+          console.log(response.ok)
+          throw new Error('Network response was not ok')
+        }
+        const text = await response.text()
+        console.log(text)
+        
+        this.message = "Success!! iNaturalist observation has been updated. The updates will be synchronised to CAMS within an hour."
+      } catch (error) {
+        this.message = "Error updating observation, please report to support@econet.nz. " + error
+        console.error('Error fetching data:', error)
+      }
+    }
   }
 }
 </script>
