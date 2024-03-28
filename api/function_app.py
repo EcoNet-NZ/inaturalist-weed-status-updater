@@ -30,20 +30,20 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
     authorization_code = req.params.get('auth-code')
     observation_id = req.params.get('state')
     # observation_id = base64.b64decode(req.params.get('state')).decode()
-    body = req.get_body().decode()
-    logging.info('Body: ' + body)
-    try:
-        fields = json.loads(body)
-        logging.info("Fields: " + fields)
-        new_observation_id = fields['observationId']
-    except:
-        return func.HttpResponse('Unable to get observation id', 502)   
+    # body = req.get_body().decode()
+    # logging.info('Body: ' + body)
+    # try:
+    #     fields = json.loads(body)
+    #     logging.info("Fields: " + fields)
+    #     new_observation_id = fields['observationId']
+    # except:
+    #     return func.HttpResponse('Unable to get observation id', 502)   
     # observation_id = body
 
-    try:
-        assert observation_id == new_observation_id
-    except:
-        return func.HttpResponse(f'observation ids dont match {observation_id} {new_observation_id}', 503)
+    # try:
+    #     assert observation_id == new_observation_id
+    # except:
+    #     return func.HttpResponse(f'observation ids dont match {observation_id} {new_observation_id}', 503)
 
     if authorization_code:
         data = {
