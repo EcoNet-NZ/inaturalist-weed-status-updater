@@ -144,7 +144,7 @@ export default {
       try {
         const url = new URL('/api/update', window.location.href)
         url.searchParams.set('auth-code', this.code)
-        url.searchParams.set('state', btoa(this.observationId))
+        url.searchParams.set('state', this.observationId)
         const jsonBody = JSON.stringify(this.observationId)
         console.log(url)
         console.log('Sending body ' + jsonBody)
