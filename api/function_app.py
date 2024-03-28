@@ -45,9 +45,18 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
                 "value": "n/a"
             }
         }
-        api_call_headers = {'Authorization': 'Bearer ' + get_access_token(authorization_code)}
-        response = requests.post(CREATE_OFV_URL, json=data, headers=api_call_headers)
-        return func.HttpResponse(f"Yay! The iNaturalist observation was updated {response}!")
+        try:
+            api_call_headers = {'Authorization': 'Bearer ' + get_access_token(authorization_code)}
+            response = requests.post(CREATE_OFV_URL, json=data, headers=api_call_headers)
+            response.raise_for_status()
+            # Process the response if the request was successful
+            return func.HttpResponse(f"Yay! The iNaturalist observation was updated {response}!")
+        except requests.exceptions.RequestException as e:
+            logging.error(e)
+            return func.HttpResponse(e, 500)
+        except Exception as e:
+            logging.error(e)
+            return func.HttpResponse(e, 500)
     else:
         return func.HttpResponse(
              "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
