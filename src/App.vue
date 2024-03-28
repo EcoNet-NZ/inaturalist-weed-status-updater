@@ -72,6 +72,7 @@ export default {
       this.observationId = params.get('state')
       this.code = params.get('code')
       console.log('Observation id is "' + this.observationId + '"')
+      console.log("Code is " + this.code)
       this.iNaturalistUrl = 'https://inaturalist.nz/observations/' + this.observationId
   },  
   // components: {

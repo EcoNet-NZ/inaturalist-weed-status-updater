@@ -43,6 +43,7 @@ import AlertBox from './AlertBox';
 export default {
   name: 'ObservationReader',
   props: {
+    code: String,
     observationId: String,
     controlled: Boolean,
     alive: Boolean,
