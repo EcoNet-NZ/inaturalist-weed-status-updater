@@ -32,6 +32,7 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
     # observation_id = base64.b64decode(req.params.get('state')).decode()
     json = req.get_json()
     logging.info(json)
+    observation_id = json['observationId']
     # body = req.get_body().decode()
     # logging.info('Body: ' + body)
     # # try:
