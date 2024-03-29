@@ -145,7 +145,10 @@ export default {
         const url = new URL('/api/update', window.location.href)
         url.searchParams.set('auth-code', this.code)
         url.searchParams.set('state', this.observationId)
-        const jsonBody = JSON.stringify({observationId: this.observationId})
+        const jsonBody = JSON.stringify({
+            observationId: this.observationId,
+            area_m2: this.area_m2
+          })
         console.log(url)
         console.log('Sending body ' + jsonBody)
         const response = await fetch(url, {

@@ -33,6 +33,7 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
     json = req.get_json()
     logging.info(json)
     observation_id = json['observationId']
+    area_m2 = json['area_m2']
     # body = req.get_body().decode()
     # logging.info('Body: ' + body)
     # # try:
@@ -52,8 +53,8 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
         data = {
             "observation_field_value": {
                 "observation_id": observation_id,
-                "observation_field_id": 42,
-                "value": "n/a"
+                "observation_field_id": 12414,
+                "value": area_m2
             }
         }
         try:
