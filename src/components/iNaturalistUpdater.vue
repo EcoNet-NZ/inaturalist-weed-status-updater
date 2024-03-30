@@ -42,15 +42,15 @@ export default {
     code: String,
     observationId: String,
     dateControlled: Date,
+    dateOfStatusUpdate: Date,
     controlled: Boolean,
     alive: Boolean,
-    dead: Boolean,
-    dateOfStatusUpdate: Date
+    dead: Boolean
   },
 
   data() {
     return {
-      area_m2: "",
+      area: "",
       location_details: "",
       message: "",
       howTreated: "",
@@ -101,7 +101,7 @@ export default {
       
       console.log (json.results[0].ofvs.filter(ofv => ofv.field_id === 12414)[0].value)
       var ofvs = json.results[0].ofvs
-      this.area_m2 = ofvs.filter(ofv => ofv.field_id === 12414)[0].value
+      this.area = ofvs.filter(ofv => ofv.field_id === 12414)[0].value
       this.location_details = ofvs.filter(ofv => ofv.field_id === 5453)[0].value
       
     } catch (error) {
@@ -118,7 +118,9 @@ export default {
         url.searchParams.set('state', this.observationId)
         const jsonBody = JSON.stringify({
             observationId: this.observationId,
-            area_m2: this.area_m2
+            area: this.area,
+            dateControlled: this.dateControlled,
+            dateOfStatusUpdate: this.dateOfStatusUpdate
           })
         console.log(url)
         console.log('Sending body ' + jsonBody)

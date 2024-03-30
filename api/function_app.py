@@ -2,7 +2,6 @@ import azure.functions as func
 import requests
 import logging
 import os
-import json
 
 TOKEN_URL = 'https://www.inaturalist.org/oauth/token'
 CREATE_OFV_URL = 'https://api.inaturalist.org/v1/observation_field_values'
@@ -28,33 +27,27 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
     authorization_code = req.params.get('auth-code')
-    observation_id = req.params.get('state')
-    # observation_id = base64.b64decode(req.params.get('state')).decode()
+
     json = req.get_json()
     logging.info(json)
     observation_id = json['observationId']
-    area_m2 = json['area_m2']
-    # body = req.get_body().decode()
-    # logging.info('Body: ' + body)
-    # # try:
-    # fields = json.loads(body)
-    # logging.info("Fields: " + fields)
-    #     new_observation_id = fields['observationId']
-    # except:
-    #     return func.HttpResponse('Unable to get observation id', 502)   
-    # observation_id = body
-
-    # try:
-    #     assert observation_id == new_observation_id
-    # except:
-    #     return func.HttpResponse(f'observation ids dont match {observation_id} {new_observation_id}', 503)
 
     if authorization_code:
         data = {
             "observation_field_value": {
                 "observation_id": observation_id,
                 "observation_field_id": 12414,
-                "value": area_m2
+                "value": json['area']
+            },
+            "observation_field_value": {
+                "observation_id": observation_id,
+                "observation_field_id": 6508,
+                "value": json['dateControlled']
+            },
+            "observation_field_value": {
+                "observation_id": observation_id,
+                "observation_field_id": 15796,
+                "value": json['dateOfStatusUpdate']
             }
         }
         try:
