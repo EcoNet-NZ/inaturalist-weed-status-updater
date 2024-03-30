@@ -25,16 +25,16 @@ import TabPanel from 'primevue/tabpanel';
         <TabView>
           <TabPanel header="Controlled">
             <div class="flex flex-column gap-3">
-                <iNaturalistUpdater :controlled=true :observation-id="observationId" :code="code" :date-controlled="visitDate"></iNaturalistUpdater>
+                <iNaturalistUpdater :controlled=true :observation-id="observationId" :code="code" :date-controlled="dateOnly(visitDate)"></iNaturalistUpdater>
             </div>
           </TabPanel>
           <TabPanel header="Alive">
             <div class="flex flex-column gap-3">
-              <iNaturalistUpdater :alive=true :observation-id="observationId" :code="code" :date-of-status-update="visitDate"></iNaturalistUpdater>
+              <iNaturalistUpdater :alive=true :observation-id="observationId" :code="code" :date-of-status-update="dateOnly(visitDate)"></iNaturalistUpdater>
             </div>
           </TabPanel>
           <TabPanel header="Dead / Not Present">
-              <iNaturalistUpdater :dead=true :observation-id="observationId" :code="code" :date-of-status-update="visitDate"></iNaturalistUpdater>
+              <iNaturalistUpdater :dead=true :observation-id="observationId" :code="code" :date-of-status-update="dateOnly(visitDate)"></iNaturalistUpdater>
           </TabPanel>
         </TabView>
       </div>
@@ -43,8 +43,11 @@ import TabPanel from 'primevue/tabpanel';
 </template>
 
 <script>
+const dayjs = require('dayjs')
+
 export default {
   name: 'weed-status-updater',
+
   created: function() {
     const params = new URLSearchParams(window.location.search)
       this.observationId = params.get('state')
@@ -52,7 +55,8 @@ export default {
       console.log('Observation id is "' + this.observationId + '"')
       console.log("Code is " + this.code)
       this.iNaturalistUrl = 'https://inaturalist.nz/observations/' + this.observationId
-  },  
+  },
+
   data() {
     return {
       name: '',
@@ -61,9 +65,16 @@ export default {
       visitDate: new Date(),
     }
   },
+
   computed: {
     visitDateValid() {
       return this.visitDate != null
+    }
+  },
+
+  methods: {      
+    dateOnly(date) {
+      return dayjs(date).format('YYYY-MM-DD')
     }
   }
 }

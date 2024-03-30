@@ -50,8 +50,8 @@ export default {
   props: {
     code: String,
     observationId: String,
-    dateControlled: Date,
-    dateOfStatusUpdate: Date,
+    dateControlled: String,
+    dateOfStatusUpdate: String,
     controlled: Boolean,
     alive: Boolean,
     dead: Boolean
