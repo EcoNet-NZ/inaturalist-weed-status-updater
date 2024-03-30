@@ -40,21 +40,10 @@ import Fieldset from 'primevue/fieldset'
 // Click on the field and the URL contains the field id, ie https://www.inaturalist.org/observation_fields/<field id>
 const OBSERVATION_FIELD_ID = {
   area: 12414,
-  locationDetails: 5453
+  locationDetails: 5453,
+  dateControlled: 6508,
+  dateOfStatusUpdate: 15796
 }
-
-// # ,
-//             # "observation_field_value": {
-//             #     "observation_id": observation_id,
-//             #     "observation_field_id": 6508,
-//             #     "value": json['dateControlled']
-//             # },
-//             # "observation_field_value": {
-//             #     "observation_id": observation_id,
-//             #     "observation_field_id": 15796,
-//             #     "value": json['dateOfStatusUpdate']
-//             # }
-
 
 export default {
   name: 'ObservationReader',
