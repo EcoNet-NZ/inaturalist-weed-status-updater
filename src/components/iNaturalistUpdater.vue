@@ -16,7 +16,7 @@ import Fieldset from 'primevue/fieldset'
     <Fieldset v-if="controlled || alive" legend="Weed Details" :toggleable="true" class="p-0 m-0">
     <div class="flex align-items-center mb-3" :class="{ 'p-error': !locationDetailsValid }">
       <label for="locationDetails" class="font-medium text-900 w-6rem">Location Details:</label>
-      <input type="text" id="locationDetails" v-model="location_details" class="p-3 border-1 border-300 border-round w-full">
+      <input type="text" id="locationDetails" v-model="locationDetails" class="p-3 border-1 border-300 border-round w-full">
       <span v-if="!locationDetailsValid">Location details are required.</span>
     </div>
     <div v-if="controlled || alive" class="flex align-items-center gap-2">
@@ -36,6 +36,26 @@ import Fieldset from 'primevue/fieldset'
 </template>
 
 <script>
+// Observation Field Ids can be found by searching for the observation field at https://www.inaturalist.org/observation_fields
+// Click on the field and the URL contains the field id, ie https://www.inaturalist.org/observation_fields/<field id>
+const OBSERVATION_FIELD_ID = {
+  area: 12414,
+  locationDetails: 5453
+}
+
+// # ,
+//             # "observation_field_value": {
+//             #     "observation_id": observation_id,
+//             #     "observation_field_id": 6508,
+//             #     "value": json['dateControlled']
+//             # },
+//             # "observation_field_value": {
+//             #     "observation_id": observation_id,
+//             #     "observation_field_id": 15796,
+//             #     "value": json['dateOfStatusUpdate']
+//             # }
+
+
 export default {
   name: 'ObservationReader',
   props: {
@@ -51,7 +71,7 @@ export default {
   data() {
     return {
       area: "",
-      location_details: "",
+      locationDetails: "",
       message: "",
       howTreated: "",
       controlMethods: [
@@ -69,7 +89,7 @@ export default {
 
   computed: {
     locationDetailsValid() {
-      return this.location_details.trim() !== '';
+      return this.locationDetails.trim() !== '';
     },
     allFieldsValid() {
       if (this.controlled && !this.dateControlled) {
@@ -99,10 +119,10 @@ export default {
       }
       const json = await response.json()
       
-      console.log (json.results[0].ofvs.filter(ofv => ofv.field_id === 12414)[0].value)
+      // console.log (json.results[0].ofvs.filter(ofv => ofv.field_id === 12414)[0].value)
       var ofvs = json.results[0].ofvs
-      this.area = ofvs.filter(ofv => ofv.field_id === 12414)[0].value
-      this.location_details = ofvs.filter(ofv => ofv.field_id === 5453)[0].value
+      this.area = ofvs.filter(ofv => ofv.field_id === OBSERVATION_FIELD_ID['area'])[0].value
+      this.locationDetails = ofvs.filter(ofv => ofv.field_id === OBSERVATION_FIELD_ID['locationDetails'])[0].value
       
     } catch (error) {
       this.message = "Error reading observation, please report to support@econet.nz. " + error
@@ -118,7 +138,7 @@ export default {
         url.searchParams.set('state', this.observationId)
         const jsonBody = JSON.stringify({
             observationId: this.observationId,
-            area: this.area,
+            [OBSERVATION_FIELD_ID['area']]: this.area,
             dateControlled: this.dateControlled,
             dateOfStatusUpdate: this.dateOfStatusUpdate
           })
@@ -149,7 +169,7 @@ export default {
         this.message = "Error updating observation, please report to support@econet.nz. " + error
         console.error('Error fetching data:', error)
       }
-    }
+    },
   }
 }
 </script>

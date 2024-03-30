@@ -27,44 +27,33 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
     authorization_code = req.params.get('auth-code')
+    if not authorization_code:
+        return func.HttpResponse("Authorization code not set", 500)
+    
+    api_call_headers = {'Authorization': 'Bearer ' + get_access_token(authorization_code)}
 
     json = req.get_json()
     logging.info(json)
     observation_id = json['observationId']
 
-    if authorization_code:
-        data = {
-            "observation_field_value": {
-                "observation_id": observation_id,
-                "observation_field_id": 12414,
-                "value": json['area']
+    for key, value in json.items():
+        if key != 'observationId':
+            data = {
+                "observation_field_value": {
+                    "observation_id": observation_id,
+                    "observation_field_id": key,
+                    "value": value
+                }
             }
-            # ,
-            # "observation_field_value": {
-            #     "observation_id": observation_id,
-            #     "observation_field_id": 6508,
-            #     "value": json['dateControlled']
-            # },
-            # "observation_field_value": {
-            #     "observation_id": observation_id,
-            #     "observation_field_id": 15796,
-            #     "value": json['dateOfStatusUpdate']
-            # }
-        }
+
         try:
-            api_call_headers = {'Authorization': 'Bearer ' + get_access_token(authorization_code)}
             response = requests.post(CREATE_OFV_URL, json=data, headers=api_call_headers)
             response.raise_for_status()
-            # Process the response if the request was successful
-            return func.HttpResponse(f"Yay! The iNaturalist observation was updated {response}!")
-        except requests.exceptions.RequestException as e:
-            logging.error(e)
-            return func.HttpResponse(e, 501)
+        # except requests.exceptions.RequestException as e:
+        #     logging.error(e)
+        #     return func.HttpResponse(e, 501)
         except Exception as e:
             logging.error(e)
-            return func.HttpResponse(e, 504)
-    else:
-        return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
-        )
+            return func.HttpResponse(e, 500)
+
+    return func.HttpResponse(f"Yay! The iNaturalist observation was updated {response}!")
