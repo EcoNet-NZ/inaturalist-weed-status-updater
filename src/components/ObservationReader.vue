@@ -2,31 +2,33 @@
 import Button from 'primevue/button';
 import Dropdown from 'primevue/dropdown';
 import AlertBox from './AlertBox';
-
+import Fieldset from 'primevue/fieldset'
 </script>
 
 <template>
-                <!-- <label for="name" class="font-medium text-900 w-6rem">Name</label>
-                <InputText id="name" v-model="name" class="p-3 border-1 border-300 border-round w-full" /> -->
+    <Fieldset v-if="controlled" legend="Control Details" :toggleable="true" class="p-0 m-0">
+      <div v-if="controlled" class="flex align-items-center gap-2 p-0 m-0" >
+        <label for="howTreated" class="font-medium text-900 w-6rem">Control Method</label>
+        <Dropdown v-model="howTreated" :options="controlMethods" optionLabel="name" optionValue="code" class="p-2 border-1 border-300 border-round w-full" :virtualScrollerOptions="{ itemSize: 24 }" />
+      </div>
+    </Fieldset>
 
-    <div v-if="controlled" class="flex align-items-center gap-2">
-      <label for="howTreated" class="font-medium text-900 w-6rem">Control Method</label>
-      <Dropdown v-model="howTreated" :options="controlMethods" optionLabel="name" optionValue="code" class="p-2 border-1 border-300 border-round w-full" :virtualScrollerOptions="{ itemSize: 24 }" />
-    </div>
-
-    <div v-if="controlled || alive" class="flex align-items-center gap-2">
+    <Fieldset v-if="controlled || alive" legend="Weed Details" :toggleable="true" class="p-0 m-0">
+    <div class="flex align-items-center mb-3" :class="{ 'p-error': !locationDetailsValid }">
       <label for="locationDetails" class="font-medium text-900 w-6rem">Location Details:</label>
       <input type="text" id="locationDetails" v-model="location_details" class="p-3 border-1 border-300 border-round w-full">
+      <span v-if="!locationDetailsValid">Location details are required.</span>
     </div>
     <div v-if="controlled || alive" class="flex align-items-center gap-2">
       <label for="areaInput" class="font-medium text-900 w-6rem">Area (m²):</label>
       <input type="number" id="areaInput" v-model="area_m2" class="p-3 border-1 border-300 border-round w-full">
     </div>
+    </Fieldset>
     <div v-if="dead" class="flex align-items-center gap-2">
       <p>No further details needed. Press button below to update.</p>
     </div>
     <div class="flex flex-column gap-3">
-      <Button @click="updateObservation" label="Update Observation" class="p-3 border-1 border-300 border-round bg-primary text-white font-medium" />
+      <Button @click="updateObservation" label="Update Observation" :disabled="!allFieldsValid" class="p-3 border-1 border-300 border-round bg-primary text-white font-medium" />
     </div>
     <div v-if="message" class="flex flex-column gap-3">
       <AlertBox>{{ message }}</AlertBox>
@@ -64,6 +66,15 @@ export default {
       // observationId: "",
       // iNaturalistUrl: ""
     };
+  },
+  computed: {
+    locationDetailsValid() {
+      return this.location_details.trim() !== '';
+    },
+    allFieldsValid() {
+      // Check the validity of all relevant fields
+      return this.locationDetailsValid /* && Add other validation checks here */; 
+    },
   },
   created: async function() {
   // created: async function() {
@@ -196,4 +207,14 @@ button {
   border-radius: 8px;
 }
 </style> -->
+
+<style scoped>
+.p-error {
+  border: 1px solid red;
+}
+.p-error span {
+  color: red;
+  font-size: 0.8rem;
+}
+</style>
 
