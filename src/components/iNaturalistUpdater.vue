@@ -128,8 +128,8 @@ export default {
         const jsonBody = JSON.stringify({
             observationId: this.observationId,
             [OBSERVATION_FIELD_ID['area']]: this.area,
-            dateControlled: this.dateControlled,
-            dateOfStatusUpdate: this.dateOfStatusUpdate
+            [OBSERVATION_FIELD_ID['dateControlled']]: this.dateControlled,
+            [OBSERVATION_FIELD_ID['dateOfStatusUpdate']]: this.dateOfStatusUpdate
           })
         console.log(url)
         console.log('Sending body ' + jsonBody)
