@@ -33,7 +33,7 @@ import TabPanel from 'primevue/tabpanel';
               <iNaturalistUpdater :alive=true :observation-id="observationId" :code="code" :date-of-status-update="visitDate"></iNaturalistUpdater>
             </div>
           </TabPanel>
-          <TabPanel header="Dead / No Control Needed">
+          <TabPanel header="Dead / Not Present">
               <iNaturalistUpdater :dead=true :observation-id="observationId" :code="code" :date-of-status-update="visitDate"></iNaturalistUpdater>
           </TabPanel>
         </TabView>

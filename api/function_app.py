@@ -38,17 +38,18 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
                 "observation_id": observation_id,
                 "observation_field_id": 12414,
                 "value": json['area']
-            },
-            "observation_field_value": {
-                "observation_id": observation_id,
-                "observation_field_id": 6508,
-                "value": json['dateControlled']
-            },
-            "observation_field_value": {
-                "observation_id": observation_id,
-                "observation_field_id": 15796,
-                "value": json['dateOfStatusUpdate']
             }
+            # ,
+            # "observation_field_value": {
+            #     "observation_id": observation_id,
+            #     "observation_field_id": 6508,
+            #     "value": json['dateControlled']
+            # },
+            # "observation_field_value": {
+            #     "observation_id": observation_id,
+            #     "observation_field_id": 15796,
+            #     "value": json['dateOfStatusUpdate']
+            # }
         }
         try:
             api_call_headers = {'Authorization': 'Bearer ' + get_access_token(authorization_code)}
