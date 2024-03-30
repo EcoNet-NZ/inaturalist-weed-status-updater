@@ -41,10 +41,11 @@ export default {
   props: {
     code: String,
     observationId: String,
-    visitDate: Date,
+    dateControlled: Date,
     controlled: Boolean,
     alive: Boolean,
-    dead: Boolean
+    dead: Boolean,
+    dateOfStatusUpdate: Date
   },
 
   data() {
@@ -71,7 +72,10 @@ export default {
       return this.location_details.trim() !== '';
     },
     allFieldsValid() {
-      if (this.visitDate == null) {
+      if (this.controlled && !this.dateControlled) {
+        return false
+      }
+      if ((this.alive || this.dead) && !this.dateOfStatusUpdate) {
         return false
       }
       if (this.controlled || this.alive) {

@@ -1,5 +1,5 @@
 <script setup>
-import ObservationReader from './components/ObservationReader.vue'
+import iNaturalistUpdater from './components/iNaturalistUpdater.vue'
 import Calendar from 'primevue/calendar';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
@@ -25,16 +25,16 @@ import TabPanel from 'primevue/tabpanel';
         <TabView>
           <TabPanel header="Controlled">
             <div class="flex flex-column gap-3">
-                <ObservationReader :controlled=true :observation-id="observationId" :code="code" :visit-date="visitDate"></ObservationReader>
+                <iNaturalistUpdater :controlled=true :observation-id="observationId" :code="code" :date-controlled="visitDate"></iNaturalistUpdater>
             </div>
           </TabPanel>
           <TabPanel header="Alive">
             <div class="flex flex-column gap-3">
-              <ObservationReader :alive=true :observation-id="observationId" :code="code" :visit-date="visitDate"></ObservationReader>
+              <iNaturalistUpdater :alive=true :observation-id="observationId" :code="code" :date-of-status-update="visitDate"></iNaturalistUpdater>
             </div>
           </TabPanel>
           <TabPanel header="Dead / No Control Needed">
-              <ObservationReader :dead=true :observation-id="observationId" :code="code" :visit-date="visitDate"></ObservationReader>
+              <iNaturalistUpdater :dead=true :observation-id="observationId" :code="code" :date-of-status-update="visitDate"></iNaturalistUpdater>
           </TabPanel>
         </TabView>
       </div>
