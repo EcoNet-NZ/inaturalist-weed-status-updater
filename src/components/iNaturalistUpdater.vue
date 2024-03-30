@@ -21,7 +21,7 @@ import Fieldset from 'primevue/fieldset'
     </div>
     <div v-if="controlled || alive" class="flex align-items-center gap-2">
       <label for="areaInput" class="font-medium text-900 w-6rem">Area (m²):</label>
-      <input type="number" id="areaInput" v-model="area_m2" class="p-3 border-1 border-300 border-round w-full">
+      <input type="number" id="areaInput" v-model="area" class="p-3 border-1 border-300 border-round w-full">
     </div>
     </Fieldset>
     <div v-if="dead" class="flex align-items-center gap-2">
