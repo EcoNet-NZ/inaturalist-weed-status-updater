@@ -15,25 +15,26 @@ import TabPanel from 'primevue/tabpanel';
         </div>
 
         <div class="flex flex-column gap-3">
-          <div class="pb-4 flex align-items-center gap-2">
+          <div class="pb-4 flex align-items-center gap-2" :class="{ 'p-error': !visitDateValid }">
             <label for="visit-date" class="font-medium text-900 w-6rem">Visit Date</label>
             <Calendar id="visit-date" v-model="visitDate" dateFormat="dd/mm/yy" class="w-full" />
+            <span v-if="!visitDateValid">Visit date is required.</span>
           </div>
         </div>
         
         <TabView>
           <TabPanel header="Controlled">
             <div class="flex flex-column gap-3">
-                <ObservationReader :controlled=true :observation-id="observationId" :code="code"></ObservationReader>
+                <ObservationReader :controlled=true :observation-id="observationId" :code="code" :visit-date="visitDate"></ObservationReader>
             </div>
           </TabPanel>
           <TabPanel header="Alive">
             <div class="flex flex-column gap-3">
-              <ObservationReader :alive=true :observation-id="observationId" :code="code"></ObservationReader>
+              <ObservationReader :alive=true :observation-id="observationId" :code="code" :visit-date="visitDate"></ObservationReader>
             </div>
           </TabPanel>
           <TabPanel header="Dead / No Control Needed">
-              <ObservationReader :dead=true :observation-id="observationId" :code="code"></ObservationReader>
+              <ObservationReader :dead=true :observation-id="observationId" :code="code" :visit-date="visitDate"></ObservationReader>
           </TabPanel>
         </TabView>
       </div>
@@ -58,6 +59,11 @@ export default {
       email: '',
       password: '',
       visitDate: new Date(),
+    }
+  },
+  computed: {
+    visitDateValid() {
+      return this.visitDate != null
     }
   }
 }

@@ -7,7 +7,7 @@ import Fieldset from 'primevue/fieldset'
 
 <template>
     <Fieldset v-if="controlled" legend="Control Details" :toggleable="true" class="p-0 m-0">
-      <div v-if="controlled" class="flex align-items-center gap-2 p-0 m-0" >
+      <div v-if="controlled" class="flex align-items-center gap-2 p-0 m-0">
         <label for="howTreated" class="font-medium text-900 w-6rem">Control Method</label>
         <Dropdown v-model="howTreated" :options="controlMethods" optionLabel="name" optionValue="code" class="p-2 border-1 border-300 border-round w-full" :virtualScrollerOptions="{ itemSize: 24 }" />
       </div>
@@ -41,6 +41,7 @@ export default {
   props: {
     code: String,
     observationId: String,
+    visitDate: Date,
     controlled: Boolean,
     alive: Boolean,
     dead: Boolean
@@ -70,7 +71,9 @@ export default {
       return this.location_details.trim() !== '';
     },
     allFieldsValid() {
-      // Check the validity of all relevant fields for each scope
+      if (this.visitDate == null) {
+        return false
+      }
       if (this.controlled || this.alive) {
         return this.locationDetailsValid /* && Add other validation checks here */; 
       }
