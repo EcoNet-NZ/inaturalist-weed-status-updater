@@ -120,17 +120,33 @@ export default {
   },
 
   methods: {      
+    createJsonBody() {
+      var jsonBody = JSON.stringify({
+          observationId: this.observationId,
+        })
+      if (this.controlled || this.alive) {
+        jsonBody += JSON.stringify({
+          [OBSERVATION_FIELD_ID['area']]: this.area,
+        })
+      }
+      if (this.controlled) {
+        jsonBody += JSON.stringify({
+          [OBSERVATION_FIELD_ID['dateControlled']]: this.dateControlled,
+        })
+      } else {
+        jsonBody += JSON.stringify({
+          [OBSERVATION_FIELD_ID['dateOfStatusUpdate']]: this.dateOfStatusUpdate
+        })
+      }
+      return jsonBody
+    },
+
     async updateObservation() {
       try {
         const url = new URL('/api/update', window.location.href)
         url.searchParams.set('auth-code', this.code)
         url.searchParams.set('state', this.observationId)
-        const jsonBody = JSON.stringify({
-            observationId: this.observationId,
-            [OBSERVATION_FIELD_ID['area']]: this.area,
-            [OBSERVATION_FIELD_ID['dateControlled']]: this.dateControlled,
-            [OBSERVATION_FIELD_ID['dateOfStatusUpdate']]: this.dateOfStatusUpdate
-          })
+        var jsonBody = this.createJsonBody()
         console.log(url)
         console.log('Sending body ' + jsonBody)
         const response = await fetch(url, {
@@ -158,7 +174,7 @@ export default {
         this.message = "Error updating observation, please report to support@econet.nz. " + error
         console.error('Error fetching data:', error)
       }
-    },
+    }
   }
 }
 </script>
