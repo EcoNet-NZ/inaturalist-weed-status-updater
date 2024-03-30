@@ -1,8 +1,8 @@
 <script setup>
 import iNaturalistUpdater from './components/iNaturalistUpdater.vue'
 import Calendar from 'primevue/calendar';
-import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
+import TabView from 'primevue/tabview';
 </script>
 
 <template>
@@ -17,7 +17,7 @@ import TabPanel from 'primevue/tabpanel';
         <div class="flex flex-column gap-3">
           <div class="pb-4 flex align-items-center gap-2" :class="{ 'p-error': !visitDateValid }">
             <label for="visit-date" class="font-medium text-900 w-6rem">Visit Date</label>
-            <Calendar id="visit-date" v-model="visitDate" dateFormat="dd/mm/yy" class="w-full" />
+            <Calendar id="visit-date" v-model="visitDate" dateFormat="dd/mm/yy" :maxDate="today" class="w-full" />
             <span v-if="!visitDateValid">Visit date is required.</span>
           </div>
         </div>
@@ -63,6 +63,8 @@ export default {
       email: '',
       password: '',
       visitDate: new Date(),
+
+      today: new Date(),
     }
   },
 

@@ -1,41 +1,102 @@
 <script setup>
-import Button from 'primevue/button';
-import Dropdown from 'primevue/dropdown';
 import AlertBox from './AlertBox';
-import Fieldset from 'primevue/fieldset'
+import Button from 'primevue/button';
+import Calendar from 'primevue/calendar';
+import Dropdown from 'primevue/dropdown';
+import Fieldset from 'primevue/fieldset';
+import RadioButton from 'primevue/radiobutton';
 </script>
 
 <template>
     <Fieldset v-if="controlled" legend="Control Details" :toggleable="true" class="p-0 m-0">
-      <div v-if="controlled" class="flex align-items-center gap-2 p-0 m-0">
-        <label for="howTreated" class="font-medium text-900 w-6rem">Control Method</label>
-        <Dropdown v-model="howTreated" :options="controlMethods" optionLabel="name" optionValue="code" class="p-2 border-1 border-300 border-round w-full" :virtualScrollerOptions="{ itemSize: 24 }" />
+      <div class="flex align-items-center gap-2">
+        <label class="font-medium text-900 w-6rem mb-3 label-align">Controlled?</label>
+        <div class="inline-flex">
+          <div class="field-radiobutton">
+            <RadioButton v-model="fullyControlled" value="fully" inputId="fully" name="fullyControlled" />
+            <label for="fully" class="ml-2 label-align">Fully</label>
+          </div>
+          <div class="field-radiobutton">
+            <RadioButton v-model="fullyControlled" value="partially" inputId="partially" name="fullyControlled" />
+            <label for="partially" class="ml-2 label-align">Partially</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex align-items-center gap-2 mb-3" :class="{ 'p-error': !controlMethodValid }" >
+        <label for="controlMethod" class="font-medium text-900 w-6rem" >Control Method</label>
+        <Dropdown v-model="controlMethod" :options="controlMethods" optionLabel="name" optionValue="code" class="p-2 border-1 border-300 border-round w-full" /> 
+        <span v-if="!controlMethodValid">Control Method is required.</span>
+      </div>
+
+      <div class="flex align-items-center gap-2 mb-3" :class="{ 'p-error': !treatmentSubstanceValid }">
+        <label for="treatmentSubstance" class="font-medium text-900 w-6rem" >Treatment Substance</label>
+        <Dropdown v-model="treatmentSubstance" :options="treatmentSubstances" optionLabel="name" optionValue="code" class="p-2 border-1 border-300 border-round w-full" />
+        <span v-if="!treatmentSubstanceValid">Treatment Substance is required.</span>
+      </div>
+
+      <div class="flex align-items-center gap-2">
+        <label for="treatmentDetails" class="font-medium text-900 w-6rem">Treatment Details</label>
+      <input type="text" id="treatmentDetails" v-model="treatmentDetails" class="p-3 border-1 border-300 border-round w-full">
       </div>
     </Fieldset>
 
     <Fieldset v-if="controlled || alive" legend="Weed Details" :toggleable="true" class="p-0 m-0">
-    <div class="flex align-items-center mb-3" :class="{ 'p-error': !locationDetailsValid }">
-      <label for="locationDetails" class="font-medium text-900 w-6rem">Location Details:</label>
-      <input type="text" id="locationDetails" v-model="locationDetails" class="p-3 border-1 border-300 border-round w-full">
-      <span v-if="!locationDetailsValid">Location details are required.</span>
-    </div>
-    <div v-if="controlled || alive" class="flex align-items-center gap-2">
-      <label for="areaInput" class="font-medium text-900 w-6rem">Area (m²):</label>
-      <input type="number" id="areaInput" v-model="area" class="p-3 border-1 border-300 border-round w-full">
-    </div>
+      <div class="flex align-items-center gap-2 mb-3">
+        <label for="locationDetails" class="font-medium text-900 w-6rem">Location Details</label>
+        <input type="text" id="locationDetails" v-model="locationDetails" class="p-3 border-1 border-300 border-round w-full">
+      </div>
+
+      <div v-if="controlled || alive" class="flex align-items-center gap-2 mb-3">
+        <label for="area" class="font-medium text-900 w-6rem">Area (m²)</label>
+        <input type="number" id="area" v-model="area" class="p-3 border-1 border-300 border-round w-full">
+      </div>
+
+      <div v-if="controlled || alive" class="flex align-items-center gap-2 mb-3">
+        <label for="height" class="font-medium text-900 w-6rem">Height (m)</label>
+        <input type="number" id="height" v-model="height" class="p-3 border-1 border-300 border-round w-full">
+      </div>
+
+      <div class="flex align-items-center gap-2 mb-3" >
+        <label for="phenology" class="font-medium text-900 w-6rem" >Stage</label>
+        <Dropdown v-model="phenology" :options="phenologies" optionLabel="name" optionValue="code" class="p-2 border-1 border-300 border-round w-full" />
+      </div>
+
+      <div class="flex align-items-center gap-2 mb-3" >
+        <label for="siteDifficulty" class="font-medium text-900 w-6rem" >Site Difficulty</label>
+        <Dropdown v-model="siteDifficulty" :options="siteDifficulties" optionLabel="name" optionValue="code" class="p-2 border-1 border-300 border-round w-full" />
+      </div>
+
+      <div class="flex align-items-center gap-2 mb-3" >
+        <label for="effort" class="font-medium text-900 w-6rem" >Likely Effort</label>
+        <Dropdown v-model="effort" :options="efforts" optionLabel="name" optionValue="code" class="p-2 border-1 border-300 border-round w-full" />
+      </div>
+
     </Fieldset>
+
+    <div class="flex flex-column gap-3">
+      <div class="pb-4 flex align-items-center gap-2">
+        <label for="follow-up-date" class="font-medium text-900 w-6rem">Follow-up Date</label>
+        <Calendar id="follow-up-date" v-model="followUpDate" dateFormat="mm/yy" view="month" :minDate="today" class="w-full pl-3" />
+      </div>
+    </div>
+
     <div v-if="dead" class="flex align-items-center gap-2">
       <p>No further details needed. Press button below to update.</p>
     </div>
+    
     <div class="flex flex-column gap-3">
       <Button @click="updateObservation" label="Update Observation" :disabled="!allFieldsValid" class="p-3 border-1 border-300 border-round bg-primary text-white font-medium" />
     </div>
+    
     <div v-if="message" class="flex flex-column gap-3">
       <AlertBox>{{ message }}</AlertBox>
     </div>
 </template>
 
 <script>
+const dayjs = require('dayjs')
+
 // Observation Field Ids can be found by searching for the observation field at https://www.inaturalist.org/observation_fields
 // Click on the field and the URL contains the field id, ie https://www.inaturalist.org/observation_fields/<field id>
 const OBSERVATION_FIELD_ID = {
@@ -59,26 +120,78 @@ export default {
 
   data() {
     return {
-      area: "",
-      locationDetails: "",
-      message: "",
-      howTreated: "",
+      message: '',
+
+      fullyControlled: 'fully',
+      controlMethod: '',
+      treatmentSubstance: '',
+      treatmentDetails: '',
+
+      locationDetails: '',
+      area: '',
+      height: '',
+      phenology: '',
+      siteDifficulty: '',
+      effort: '',
+
+      followUpDate: null,
+
+      today: new Date(),
+
       controlMethods: [
-        { name: 'Cut and paste', code: 'Cut and paint' },
-        { name: 'Drill and fill', code: 'Drill and fill' },
-        { name: 'Scrape and paste', code: 'Scrape stem and paste' },
-        { name: 'Pulled or dug', code: 'Pulled or dug' },
-        { name: 'Ringbark', code: 'Ringbark' },
-        { name: 'Spray leaves', code: 'Spray leaves' },
+        { name: 'Cut and paste',        code: 'Cut and paint' },
+        { name: 'Drill and fill',       code: 'Drill and fill' },
+        { name: 'Scrape and paste',     code: 'Scrape stem and paste' },
+        { name: 'Pulled or dug',        code: 'Pulled or dug' },
+        { name: 'Ringbark',             code: 'Ringbark' },
+        { name: 'Spray leaves',         code: 'Spray leaves' },
         { name: 'Cut but roots remain', code: 'Cut but roots remain' },
-        { name: "Don't know", code: "Don't know" },
-      ]
+        { name: "Don't know",           code: "Don't know" },
+      ],
+      treatmentSubstances: [
+        { name: 'None',                        code: 'None' },
+        { name: 'CutNPaste Original Gel',      code: 'CutNPaste Original Gel' },
+        { name: 'CutNPaste Bamboo Buster Gel', code: 'CutNPaste Bamboo Buster Gel' },
+        { name: 'CutNPaste Glimax',            code: 'CutNPaste Glimax' },
+        { name: 'CutNPaste MetGel',            code: 'CutNPaste MetGel' },
+        { name: 'CutNPaste Picloram Gel',      code: 'CutNPaste Picloram Gel' },
+        { name: 'Dow Vigilant II',             code: 'Dow Vigilant II' },
+        { name: 'Weed Weapon Invade Gel',      code: 'Weed Weapon Invade Gel' },
+        { name: 'Weed Weapon Stump-Stop-Gel',  code: 'Weed Weapon Stump-Stop-Gel' },
+        { name: 'Other',                       code: 'OTHER-TREATMENT' },
+      ],
+      phenologies: [
+        { name: 'Not recorded',         code: 'not recorded' },
+        { name: 'Vegetative only',      code: 'vegetative only' },
+        { name: 'Flower buds',          code: 'flower buds' },
+        { name: 'Flowers',              code: 'flowers' },
+        { name: 'Immature fruit',       code: 'immature fruit' },
+        { name: 'Mature fruit',         code: 'mature fruit' },
+        { name: 'Seed dispersed',       code: 'seed dispersed' },
+      ],
+      siteDifficulties: [
+        { name: 'Easy (for most people)',                         code: '1 Easy (for most people)' },
+        { name: 'Moderate',                                       code: '2 Moderate' },
+        { name: 'Challenging (may be rough or steep)',            code: '3 Challenging (may be rough or steep)' },
+        { name: 'Advanced (beyond most abilities)',               code: '4 Advanced (beyond most abilities)' },
+        { name: 'Professional skills required (eg rope access)',  code: '5 Professional skills required (eg rope access)' },
+      ],
+      efforts: [
+        { name: 'Up to one person hour',  code: '1 = Up to one person hour' },
+        { name: 'Two person hours',       code: '2 = Two person hours' },
+        { name: 'Three person hours',     code: '3 = Three person hours' },
+        { name: 'Four person hours',      code: '4 = Four person hours' },
+        { name: 'Five+ person hours',     code: '5 = Five+ person hours' },
+      ],
     };
   },
 
   computed: {
-    locationDetailsValid() {
-      return this.locationDetails.trim() !== '';
+    controlMethodValid() {
+      return this.controlMethod.trim() !== '';
+    },
+    treatmentSubstanceValid() {
+      return this.treatmentSubstance.trim() !== '';
     },
     allFieldsValid() {
       if (this.controlled && !this.dateControlled) {
@@ -87,8 +200,8 @@ export default {
       if ((this.alive || this.dead) && !this.dateOfStatusUpdate) {
         return false
       }
-      if (this.controlled || this.alive) {
-        return this.locationDetailsValid /* && Add other validation checks here */; 
+      if (this.controlled) {
+        return this.controlMethodValid && this.treatmentSubstanceValid
       }
       return true
     },
@@ -174,6 +287,9 @@ export default {
         this.message = "Error updating observation, please report to support@econet.nz. " + error
         console.error('Error fetching data:', error)
       }
+    },
+    monthOnly(date) {
+      return dayjs(date).format('YYYY-MM')
     }
   }
 }
@@ -186,6 +302,18 @@ export default {
 .p-error span {
   color: red;
   font-size: 0.8rem;
+}
+.inline-flex {
+  display: inline-flex;
+  align-items: center;
+}
+
+.inline-flex > div {
+  margin-right: 1rem;
+}
+
+.label-align {
+  line-height: 1.5;
 }
 </style>
 
