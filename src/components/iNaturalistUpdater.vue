@@ -76,7 +76,7 @@ import RadioButton from 'primevue/radiobutton';
 
     <div class="flex flex-column gap-3">
       <div class="pb-4 flex align-items-center gap-2">
-        <label for="follow-up-date" class="font-medium text-900 w-6rem">Follow-up Date</label>
+        <label for="follow-up-date" class="font-medium text-900 w-6rem">Follow-up Month</label>
         <Calendar id="follow-up-date" v-model="followUpDate" dateFormat="mm/yy" view="month" :minDate="today" class="w-full pl-3" />
       </div>
     </div>
@@ -100,11 +100,26 @@ const dayjs = require('dayjs')
 // Observation Field Ids can be found by searching for the observation field at https://www.inaturalist.org/observation_fields
 // Click on the field and the URL contains the field id, ie https://www.inaturalist.org/observation_fields/<field id>
 const OBSERVATION_FIELD_ID = {
-  area: 12414,
-  locationDetails: 5453,
+  treated: 15709,
   dateControlled: 6508,
-  dateOfStatusUpdate: 15796
+  howTreated: 15710,
+  treatmentSubstance: 15662,
+  treatmentDetails: 15712,
+
+  locationDetails: 5453,
+  area: 12414,
+  height: 587,
+  phenology: 1759,
+  siteDifficulty: 15708,
+  effort: 15661,
+
+  statusUpdate: 15795,
+  dateOfStatusUpdate: 15796,
+
+  followUpDate: 14309
 }
+const ALIVE_FIELD_VALUE = 'Alive / Regrowth'
+const DEAD_FIELD_VALUE = 'Dead / Not Present' 
 
 export default {
   name: 'ObservationReader',
@@ -161,7 +176,7 @@ export default {
         { name: 'Other',                       code: 'OTHER-TREATMENT' },
       ],
       phenologies: [
-        { name: 'Not recorded',         code: 'not recorded' },
+        // { name: 'Not recorded',         code: 'not recorded' },
         { name: 'Vegetative only',      code: 'vegetative only' },
         { name: 'Flower buds',          code: 'flower buds' },
         { name: 'Flowers',              code: 'flowers' },
@@ -234,22 +249,33 @@ export default {
 
   methods: {      
     createJsonBody() {
-      var jsonBody = JSON.stringify({
-          observationId: this.observationId,
-        })
+      var jsonBody = JSON.stringify({observationId: this.observationId})
+
       if (this.controlled || this.alive) {
         jsonBody += JSON.stringify({
+          [OBSERVATION_FIELD_ID['locationDetails']]: this.locationDetails,
           [OBSERVATION_FIELD_ID['area']]: this.area,
+          [OBSERVATION_FIELD_ID['height']]: this.height,
+          [OBSERVATION_FIELD_ID['phenology']]: this.phenology,
+          [OBSERVATION_FIELD_ID['siteDifficulty']]: this.siteDifficulty,
+          [OBSERVATION_FIELD_ID['effort']]: this.effort,
         })
       }
       if (this.controlled) {
         jsonBody += JSON.stringify({
+          [OBSERVATION_FIELD_ID['treated']]: this.fullyControlled == 'fully' ? 'Yes' : (this.fullyControlled == 'partially' ? 'Partially' : 'No'),
           [OBSERVATION_FIELD_ID['dateControlled']]: this.dateControlled,
+          [OBSERVATION_FIELD_ID['howTreated']]: this.controlMethod,
+          [OBSERVATION_FIELD_ID['treatmentSubstance']]: this.treatmentSubstance,
+          [OBSERVATION_FIELD_ID['treatmentDetails']]: this.treatmentDetails,
         })
       } else {
-        jsonBody += JSON.stringify({
-          [OBSERVATION_FIELD_ID['dateOfStatusUpdate']]: this.dateOfStatusUpdate
-        })
+        jsonBody += JSON.stringify({[OBSERVATION_FIELD_ID['dateOfStatusUpdate']]: this.dateOfStatusUpdate})
+        if (this.alive) {
+          jsonBody += JSON.stringify({[OBSERVATION_FIELD_ID['statusUpdate']]: ALIVE_FIELD_VALUE})
+        } else if (this.dead) {
+          jsonBody += JSON.stringify({[OBSERVATION_FIELD_ID['statusUpdate']]: DEAD_FIELD_VALUE})
+        }
       }
       return jsonBody
     },
