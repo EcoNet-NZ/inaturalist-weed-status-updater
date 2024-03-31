@@ -274,7 +274,7 @@ export default {
         if (this.alive) {
           jsonBody += JSON.stringify({[OBSERVATION_FIELD_ID['statusUpdate']]: ALIVE_FIELD_VALUE})
         } else if (this.dead) {
-          jsonBody += JSON.stringify({[OBSERVATION_FIELD_ID['statusUpdate']]: DEAD_FIELD_VALUE})
+          // jsonBody += JSON.stringify({[OBSERVATION_FIELD_ID['statusUpdate']]: DEAD_FIELD_VALUE})
         }
       }
       return jsonBody
