@@ -28,7 +28,7 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
 
     authorization_code = req.params.get('auth-code')
     if not authorization_code:
-        return func.HttpResponse("Authorization code not set", 500)
+        return func.HttpResponse("Authorization code not set", 503)
     
     api_call_headers = {'Authorization': 'Bearer ' + get_access_token(authorization_code)}
 
@@ -47,13 +47,14 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
             }
 
         try:
+            logging.info(f'Posting observation field value {data}')
             response = requests.post(CREATE_OFV_URL, json=data, headers=api_call_headers)
             response.raise_for_status()
-        # except requests.exceptions.RequestException as e:
-        #     logging.error(e)
-        #     return func.HttpResponse(e, 501)
+        except requests.exceptions.RequestException as e:
+            logging.error(e)
+            return func.HttpResponse(e, 501)
         except Exception as e:
             logging.error(e)
-            return func.HttpResponse(e, 500)
+            return func.HttpResponse(e, 502)
 
     return func.HttpResponse(f"Yay! The iNaturalist observation was updated {response}!")
