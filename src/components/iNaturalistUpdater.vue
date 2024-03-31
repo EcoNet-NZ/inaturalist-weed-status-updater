@@ -252,7 +252,7 @@ export default {
       var fields = {observationId: this.observationId}
 
       if (this.controlled || this.alive) {
-        fields += {
+        fields = {...fields,
           [OBSERVATION_FIELD_ID['locationDetails']]: this.locationDetails,
           [OBSERVATION_FIELD_ID['area']]: this.area,
           [OBSERVATION_FIELD_ID['height']]: this.height,
@@ -262,7 +262,7 @@ export default {
         }
       }
       if (this.controlled) {
-        fields += {
+        fields = {...fields,
           [OBSERVATION_FIELD_ID['treated']]: this.fullyControlled == 'fully' ? 'Yes' : (this.fullyControlled == 'partially' ? 'Partially' : 'No'),
           [OBSERVATION_FIELD_ID['dateControlled']]: this.dateControlled,
           [OBSERVATION_FIELD_ID['howTreated']]: this.controlMethod,
@@ -270,14 +270,17 @@ export default {
           [OBSERVATION_FIELD_ID['treatmentDetails']]: this.treatmentDetails,
         }
       } else {
-        fields += {[OBSERVATION_FIELD_ID['dateOfStatusUpdate']]: this.dateOfStatusUpdate}
+        fields = {...fields, [OBSERVATION_FIELD_ID['dateOfStatusUpdate']]: this.dateOfStatusUpdate}
         if (this.alive) {
-          fields += {[OBSERVATION_FIELD_ID['statusUpdate']]: ALIVE_FIELD_VALUE}
+          fields = {...fields, [OBSERVATION_FIELD_ID['statusUpdate']]: ALIVE_FIELD_VALUE}
         } else if (this.dead) {
-          fields += {[OBSERVATION_FIELD_ID['statusUpdate']]: DEAD_FIELD_VALUE}
+          fields = {...fields, [OBSERVATION_FIELD_ID['statusUpdate']]: DEAD_FIELD_VALUE}
         }
       }
-      return JSON.stringify(fields)
+      console.log('Fields:' + fields)
+      var jsonBody = JSON.stringify(fields)
+      console.log('Body: ' + jsonBody)
+      return jsonBody
     },
 
     async updateObservation() {
