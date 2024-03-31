@@ -27,11 +27,11 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
     authorization_code = 'fdsafdsafads'
-    # authorization_code = req.params.get('auth-code')
+    authorization_code = req.params.get('auth-code')
 
-    # json = req.get_json()
-    # logging.info(json)
-    # observation_id = json['observationId']
+    json = req.get_json()
+    logging.info(json)
+    observation_id = json['observationId']
 
     if authorization_code:
         # data = {
