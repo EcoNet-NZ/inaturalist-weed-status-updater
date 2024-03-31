@@ -119,7 +119,7 @@ const OBSERVATION_FIELD_ID = {
   followUpDate: 14309
 }
 const ALIVE_FIELD_VALUE = 'Alive / Regrowth'
-const DEAD_FIELD_VALUE = 'Dead / Not Present' 
+// const DEAD_FIELD_VALUE = 'Dead / Not Present' 
 
 export default {
   name: 'ObservationReader',
