@@ -51,7 +51,7 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
             #     "observation_field_id": 15796,
             #     "value": json['dateOfStatusUpdate']
             # }
-        }
+        # }
         # try:
         #     api_call_headers = {'Authorization': 'Bearer ' + get_access_token(authorization_code)}
         #     response = requests.post(CREATE_OFV_URL, json=data, headers=api_call_headers)
