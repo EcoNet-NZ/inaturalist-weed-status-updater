@@ -74,7 +74,7 @@ import RadioButton from 'primevue/radiobutton';
 
     </Fieldset>
 
-    <div class="flex flex-column gap-3">
+    <div v-if="controlled || alive" class="flex flex-column gap-3">
       <div class="pb-4 flex align-items-center gap-2">
         <label for="follow-up-date" class="font-medium text-900 w-6rem">Follow-up Month</label>
         <Calendar id="follow-up-date" v-model="followUpDate" dateFormat="mm/yy" view="month" :minDate="today" class="w-full pl-3" />
