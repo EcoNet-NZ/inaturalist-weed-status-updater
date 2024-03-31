@@ -26,12 +26,21 @@ def get_access_token(authorization_code):
 def update(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    authorization_code = 'fdsafdsafads'
-    authorization_code = req.params.get('auth-code')
+    try:
+        authorization_code = req.params.get('auth-code')
+    except:
+        return func.HttpResponse("Missing parameter 'auth-code'", 400)
 
-    json = req.get_json()
-    logging.info(json)
-    observation_id = json['observationId']
+    try:
+        json = req.get_json()
+        logging.info(f'Request body: {json}')
+    except:
+        return func.HttpResponse("Unable to parse json body", 400)
+
+    try:
+        observation_id = json['observationId']
+    except:
+        return func.HttpResponse("No observation id in  json body", 400)
 
     if authorization_code:
         # data = {
