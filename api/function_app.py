@@ -31,11 +31,11 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
     except:
         return func.HttpResponse("Missing parameter 'auth-code'", 400)
 
-    # try:
-    #     json = req.get_json()
-    #     logging.info(f'Request body: {json}')
-    # except:
-    #     return func.HttpResponse("Unable to parse json body", 400)
+    try:
+        json = req.get_json()
+        logging.info(f'Request body: {json}')
+    except:
+        return func.HttpResponse("Unable to parse json body", 400)
 
     # try:
     #     observation_id = json['observationId']
