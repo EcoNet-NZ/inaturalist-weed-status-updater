@@ -119,7 +119,7 @@ const OBSERVATION_FIELD_ID = {
   followUpDate: 14309
 }
 const ALIVE_FIELD_VALUE = 'Alive / Regrowth'
-// const DEAD_FIELD_VALUE = 'Dead / Not Present' 
+const DEAD_FIELD_VALUE = 'Dead / Not Present' 
 
 export default {
   name: 'ObservationReader',
@@ -249,35 +249,35 @@ export default {
 
   methods: {      
     createJsonBody() {
-      var jsonBody = JSON.stringify({observationId: this.observationId})
+      var fields = {observationId: this.observationId}
 
       if (this.controlled || this.alive) {
-        jsonBody += JSON.stringify({
+        fields += {
           [OBSERVATION_FIELD_ID['locationDetails']]: this.locationDetails,
           [OBSERVATION_FIELD_ID['area']]: this.area,
           [OBSERVATION_FIELD_ID['height']]: this.height,
           [OBSERVATION_FIELD_ID['phenology']]: this.phenology,
           [OBSERVATION_FIELD_ID['siteDifficulty']]: this.siteDifficulty,
           [OBSERVATION_FIELD_ID['effort']]: this.effort,
-        })
+        }
       }
       if (this.controlled) {
-        jsonBody += JSON.stringify({
+        fields += {
           [OBSERVATION_FIELD_ID['treated']]: this.fullyControlled == 'fully' ? 'Yes' : (this.fullyControlled == 'partially' ? 'Partially' : 'No'),
           [OBSERVATION_FIELD_ID['dateControlled']]: this.dateControlled,
           [OBSERVATION_FIELD_ID['howTreated']]: this.controlMethod,
           [OBSERVATION_FIELD_ID['treatmentSubstance']]: this.treatmentSubstance,
           [OBSERVATION_FIELD_ID['treatmentDetails']]: this.treatmentDetails,
-        })
+        }
       } else {
-        jsonBody += JSON.stringify({[OBSERVATION_FIELD_ID['dateOfStatusUpdate']]: this.dateOfStatusUpdate})
+        fields += {[OBSERVATION_FIELD_ID['dateOfStatusUpdate']]: this.dateOfStatusUpdate}
         if (this.alive) {
-          jsonBody += JSON.stringify({[OBSERVATION_FIELD_ID['statusUpdate']]: ALIVE_FIELD_VALUE})
+          fields += {[OBSERVATION_FIELD_ID['statusUpdate']]: ALIVE_FIELD_VALUE}
         } else if (this.dead) {
-          // jsonBody += JSON.stringify({[OBSERVATION_FIELD_ID['statusUpdate']]: DEAD_FIELD_VALUE})
+          fields += {[OBSERVATION_FIELD_ID['statusUpdate']]: DEAD_FIELD_VALUE}
         }
       }
-      return jsonBody
+      return JSON.stringify(fields)
     },
 
     async updateObservation() {
