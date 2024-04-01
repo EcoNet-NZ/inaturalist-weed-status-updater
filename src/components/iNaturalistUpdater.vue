@@ -250,7 +250,14 @@ export default {
       this.treatmentSubstance = this.getFieldValue(ofvs, 'treatmentSubstance')
       this.treatmentDetails = this.getFieldValue(ofvs, 'treatmentDetails')
       
-      this.followUpDate = this.getFieldValue(ofvs, 'followUpDate')
+      console.log(ofvs)
+      console.log(OBSERVATION_FIELD_ID['followUpDate'])
+      this.getFieldValue(ofvs, 'followUpDate')
+      // var fud = this.getFieldValue(ofvs, 'followUpDate')
+      // console.log(fud)
+      // if (Boolean(fud)) this.followUpDate = fud
+
+      
 
     } catch (error) {
       this.message = "Error reading observation, please report to support@econet.nz. " + error
@@ -260,7 +267,10 @@ export default {
 
   methods: {
     getFieldValue(ofvs, fieldName) {
-      return ofvs.filter(ofv => ofv.field_id === OBSERVATION_FIELD_ID[fieldName])[0].value
+      var arr = ofvs.filter(ofv => ofv.field_id === OBSERVATION_FIELD_ID[fieldName])
+      if (arr.length === 0)
+        return null
+      return arr[0].value
     },
     
     createJsonBody() {
