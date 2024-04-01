@@ -4,6 +4,7 @@ import Button from 'primevue/button';
 import Calendar from 'primevue/calendar';
 import Dropdown from 'primevue/dropdown';
 import Fieldset from 'primevue/fieldset';
+import InputText from 'primevue/inputtext';
 import RadioButton from 'primevue/radiobutton';
 </script>
 
@@ -37,24 +38,24 @@ import RadioButton from 'primevue/radiobutton';
 
       <div class="flex align-items-center gap-2">
         <label for="treatmentDetails" class="font-medium text-900 w-6rem">Treatment Details</label>
-      <input type="text" id="treatmentDetails" v-model="treatmentDetails" class="p-3 border-1 border-300 border-round w-full">
+        <InputText type="text" id="treatmentDetails" v-model="treatmentDetails" class="p-3 border-1 border-300 border-round w-full"/>
       </div>
     </Fieldset>
 
     <Fieldset v-if="controlled || alive" legend="Weed Details" :toggleable="true" class="p-0 m-0">
       <div class="flex align-items-center gap-2 mb-3">
         <label for="locationDetails" class="font-medium text-900 w-6rem">Location Details</label>
-        <input type="text" id="locationDetails" v-model="locationDetails" class="p-3 border-1 border-300 border-round w-full">
+        <InputText type="text" id="locationDetails" v-model="locationDetails" class="p-3 border-1 border-300 border-round w-full"/>
       </div>
 
       <div v-if="controlled || alive" class="flex align-items-center gap-2 mb-3">
         <label for="area" class="font-medium text-900 w-6rem">Area (m²)</label>
-        <input type="number" id="area" v-model="area" class="p-3 border-1 border-300 border-round w-full">
+        <InputText type="number" id="area" v-model="area" class="p-3 border-1 border-300 border-round w-full"/>
       </div>
 
       <div v-if="controlled || alive" class="flex align-items-center gap-2 mb-3">
         <label for="height" class="font-medium text-900 w-6rem">Height (m)</label>
-        <input type="number" id="height" v-model="height" class="p-3 border-1 border-300 border-round w-full">
+        <InputText type="number" id="height" v-model="height" class="p-3 border-1 border-300 border-round w-full"/>
       </div>
 
       <div class="flex align-items-center gap-2 mb-3" >
@@ -236,46 +237,54 @@ export default {
       }
       const json = await response.json()
       
-      // console.log (json.results[0].ofvs.filter(ofv => ofv.field_id === 12414)[0].value)
       var ofvs = json.results[0].ofvs
-      this.area = ofvs.filter(ofv => ofv.field_id === OBSERVATION_FIELD_ID['area'])[0].value
-      this.locationDetails = ofvs.filter(ofv => ofv.field_id === OBSERVATION_FIELD_ID['locationDetails'])[0].value
+      this.locationDetails = this.getFieldValue(ofvs, 'locationDetails')
+      this.area = this.getFieldValue(ofvs, 'area')
+      this.height = this.getFieldValue(ofvs, 'height')
+      this.phenology = this.getFieldValue(ofvs, 'phenology')
+      this.siteDifficulty = this.getFieldValue(ofvs, 'siteDifficulty')
+      this.effort = this.getFieldValue(ofvs, 'effort')
+
+      this.treated = this.getFieldValue(ofvs, 'treated')
+      this.controlMethod = this.getFieldValue(ofvs, 'howTreated')
+      this.treatmentSubstance = this.getFieldValue(ofvs, 'treatmentSubstance')
+      this.treatmentDetails = this.getFieldValue(ofvs, 'treatmentDetails')
       
+      this.followUpDate = this.getFieldValue(ofvs, 'followUpDate')
+
     } catch (error) {
       this.message = "Error reading observation, please report to support@econet.nz. " + error
       console.error('Error fetching data:', error)
     }
   },
 
-  methods: {      
+  methods: {
+    getFieldValue(ofvs, fieldName) {
+      return ofvs.filter(ofv => ofv.field_id === OBSERVATION_FIELD_ID[fieldName])[0].value
+    },
+    
     createJsonBody() {
       var fields = {observationId: this.observationId}
 
       if (this.controlled || this.alive) {
-        fields = {...fields,
-          [OBSERVATION_FIELD_ID['locationDetails']]: this.locationDetails,
-          [OBSERVATION_FIELD_ID['area']]: this.area,
-          [OBSERVATION_FIELD_ID['height']]: this.height,
-          [OBSERVATION_FIELD_ID['phenology']]: this.phenology,
-          [OBSERVATION_FIELD_ID['siteDifficulty']]: this.siteDifficulty,
-          [OBSERVATION_FIELD_ID['effort']]: this.effort,
-        }
+        if (this.locationDetails)     fields[OBSERVATION_FIELD_ID['locationDetails']] = this.locationDetails
+        if (this.area)                fields[OBSERVATION_FIELD_ID['area']] = this.area
+        if (this.height)              fields[OBSERVATION_FIELD_ID['height']] = this.height
+        if (this.phenology)           fields[OBSERVATION_FIELD_ID['phenology']] = this.phenology
+        if (this.siteDifficulty)      fields[OBSERVATION_FIELD_ID['siteDifficulty']] = this.siteDifficulty
+        if (this.effort)              fields[OBSERVATION_FIELD_ID['effort']] = this.effort
+        if (this.followUpDate)        fields[OBSERVATION_FIELD_ID['followUpDate']] = this.monthOnly(this.followUpDate)
       }
       if (this.controlled) {
-        fields = {...fields,
-          [OBSERVATION_FIELD_ID['treated']]: this.fullyControlled == 'fully' ? 'Yes' : (this.fullyControlled == 'partially' ? 'Partially' : 'No'),
-          [OBSERVATION_FIELD_ID['dateControlled']]: this.dateControlled,
-          [OBSERVATION_FIELD_ID['howTreated']]: this.controlMethod,
-          [OBSERVATION_FIELD_ID['treatmentSubstance']]: this.treatmentSubstance,
-          [OBSERVATION_FIELD_ID['treatmentDetails']]: this.treatmentDetails,
-        }
+        if (this.fullyControlled)     fields[OBSERVATION_FIELD_ID['treated']] = this.fullyControlled == 'fully' ? 'Yes' : (this.fullyControlled == 'partially' ? 'Partially' : 'No')
+        if (this.dateControlled)      fields[OBSERVATION_FIELD_ID['dateControlled']] = this.dateControlled
+        if (this.controlMethod)       fields[OBSERVATION_FIELD_ID['howTreated']] = this.controlMethod
+        if (this.treatmentSubstance)  fields[OBSERVATION_FIELD_ID['treatmentSubstance']] = this.treatmentSubstance
+        if (this.treatmentDetails)    fields[OBSERVATION_FIELD_ID['treatmentDetails']] = this.treatmentDetails
       } else {
-        fields = {...fields, [OBSERVATION_FIELD_ID['dateOfStatusUpdate']]: this.dateOfStatusUpdate}
-        if (this.alive) {
-          fields = {...fields, [OBSERVATION_FIELD_ID['statusUpdate']]: ALIVE_FIELD_VALUE}
-        } else if (this.dead) {
-          fields = {...fields, [OBSERVATION_FIELD_ID['statusUpdate']]: DEAD_FIELD_VALUE}
-        }
+        if (this.dateOfStatusUpdate)  fields[OBSERVATION_FIELD_ID['dateOfStatusUpdate']] = this.dateOfStatusUpdate
+        if (this.alive)               fields[OBSERVATION_FIELD_ID['statusUpdate']] = ALIVE_FIELD_VALUE
+        if (this.dead)                fields[OBSERVATION_FIELD_ID['statusUpdate']] = DEAD_FIELD_VALUE
       }
       console.log('Fields:' + fields)
       var jsonBody = JSON.stringify(fields)
