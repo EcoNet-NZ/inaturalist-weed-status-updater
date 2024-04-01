@@ -204,10 +204,10 @@ export default {
 
   computed: {
     controlMethodValid() {
-      return this.controlMethod.trim() !== '';
+      return this.controlMethod && this.controlMethod.trim() !== '';
     },
     treatmentSubstanceValid() {
-      return this.treatmentSubstance.trim() !== '';
+      return this.treatmentSubstance && this.treatmentSubstance.trim() !== '';
     },
     allFieldsValid() {
       if (this.controlled && !this.dateControlled) {
@@ -250,14 +250,8 @@ export default {
       this.treatmentSubstance = this.getFieldValue(ofvs, 'treatmentSubstance')
       this.treatmentDetails = this.getFieldValue(ofvs, 'treatmentDetails')
       
-      console.log(ofvs)
-      console.log(OBSERVATION_FIELD_ID['followUpDate'])
-      this.getFieldValue(ofvs, 'followUpDate')
-      // var fud = this.getFieldValue(ofvs, 'followUpDate')
-      // console.log(fud)
-      // if (Boolean(fud)) this.followUpDate = fud
-
-      
+      var fud = this.getFieldValue(ofvs, 'followUpDate')
+      if (fud) this.followUpDate = fud
 
     } catch (error) {
       this.message = "Error reading observation, please report to support@econet.nz. " + error
