@@ -22,6 +22,36 @@ def get_access_token(authorization_code):
     else:
         return None    
 
+def update_observation_fields(json, access_token):
+    api_call_headers = {'Authorization': 'Bearer ' + access_token}
+
+    try:
+        observation_id = json['observationId']
+    except:
+        return func.HttpResponse("No observation id in json body", 400)
+
+    for key, value in json.items():
+        if key != 'observationId':
+            data = {
+                "observation_field_value": {
+                    "observation_id": observation_id,
+                    "observation_field_id": key,
+                    "value": value
+                }
+            }
+        try:    
+            response = requests.post(CREATE_OFV_URL, json=data, headers=api_call_headers)
+            response.raise_for_status()
+        # except requests.exceptions.RequestException as e:
+        #     logging.error(e)
+        #     return func.HttpResponse(e, 500)
+        except Exception as e:
+            logging.error(e)
+            return func.HttpResponse(e, 500)
+        
+    return func.HttpResponse(f"Yay! The iNaturalist observation was updated {response}!")
+
+
 @app.route(route="update", methods=(func.HttpMethod.POST,))
 def update(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
@@ -29,56 +59,20 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
     try:
         authorization_code = req.params.get('auth-code')
     except:
+        return func.HttpResponse("Unable to read 'auth-code' parameter", 400)
+    
+    if not authorization_code:
         return func.HttpResponse("Missing parameter 'auth-code'", 400)
 
+    try:
+        access_token = get_access_token(authorization_code)
+    except:
+        return func.HttpResponse("Unable to get authorization code", 401)
+        
     try:
         json = req.get_json()
         logging.info(f'Request body: {json}')
     except:
         return func.HttpResponse("Unable to parse json body", 400)
-
-    # try:
-    #     observation_id = json['observationId']
-    # except:
-    #     return func.HttpResponse("No observation id in  json body", 400)
-
-    if authorization_code:
-        # data = {
-        #     "observation_field_value": {
-        #         "observation_id": observation_id,
-        #         "observation_field_id": 12414,
-        #         "value": json['area']
-        #     }
-            # ,
-            # "observation_field_value": {
-            #     "observation_id": observation_id,
-            #     "observation_field_id": 6508,
-            #     "value": json['dateControlled']
-            # },
-            # "observation_field_value": {
-            #     "observation_id": observation_id,
-            #     "observation_field_id": 15796,
-            #     "value": json['dateOfStatusUpdate']
-            # }
-        # }
-        # try:
-        #     api_call_headers = {'Authorization': 'Bearer ' + get_access_token(authorization_code)}
-        #     response = requests.post(CREATE_OFV_URL, json=data, headers=api_call_headers)
-        #     response.raise_for_status()
-        #     # Process the response if the request was successful
-        #     return func.HttpResponse(f"Yay! The iNaturalist observation was updated {response}!")
-        # except requests.exceptions.RequestException as e:
-        #     logging.error(e)
-        #     return func.HttpResponse(e, 501)
-        # except Exception as e:
-        #     logging.error(e)
-        #     return func.HttpResponse(e, 504)
-        return func.HttpResponse(
-             "Got authorization code OK.",
-             status_code=200
-        )
-    else:
-        return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
-        )
+    
+    return update_observation_fields(json, access_token)
