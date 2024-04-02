@@ -91,7 +91,7 @@ import RadioButton from 'primevue/radiobutton';
     </div>
     
     <div v-if="message" class="flex flex-column gap-3">
-      <AlertBox>{{ message }}</AlertBox>
+      <AlertBox :type="result">{{ message }}</AlertBox>
     </div>
 </template>
 
@@ -137,6 +137,7 @@ export default {
   data() {
     return {
       message: '',
+      result: '',
 
       fullyControlled: 'fully',
       controlMethod: '',
@@ -254,7 +255,8 @@ export default {
       if (fud) this.followUpDate = fud
 
     } catch (error) {
-      this.message = "Error reading observation, please report to support@econet.nz. " + error
+      this.message = "Error reading observation, please report to kiaora@ombfree.nz. " + error
+      this.result = 'error'
       console.error('Error fetching data:', error)
     }
   },
@@ -324,9 +326,11 @@ export default {
           throw new Error('Network response was not ok')
         }
         
-        this.message = "Success!! iNaturalist observation has been updated. The updates will be synchronised to CAMS within an hour."
+        this.message = "iNaturalist observation has been updated. The updates will be synchronised to CAMS within an hour."
+        this.result = 'success'
       } catch (error) {
-        this.message = "Error updating observation, please report to support@econet.nz. " + error
+        this.message = "Error updating observation, please report to kiaora@ombfree.nz. " + error
+        this.result = 'error'
         console.error('Error fetching data:', error)
       }
     },
