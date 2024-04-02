@@ -143,6 +143,7 @@ export default {
       result: '',
 
       fullyControlled: 'fully',
+      initialTreated: '',
 
       controlMethod: '',
       treatmentSubstance: '',
@@ -264,6 +265,7 @@ export default {
       const json = await response.json()
       
       var ofvs = json.results[0].ofvs
+      this.initialTreated = this.getFieldValue(ofvs, 'treated')
       this.controlMethod = this.getFieldValue(ofvs, 'howTreated')
       this.treatmentSubstance = this.getFieldValue(ofvs, 'treatmentSubstance')
       this.treatmentDetails = this.getFieldValue(ofvs, 'treatmentDetails')
@@ -319,8 +321,9 @@ export default {
         if (this.followUpDate       != this.initialFollowUpDate)        fields[OBSERVATION_FIELD_ID['followUpDate']] = this.monthOnly(this.followUpDate)
       }
       if (this.controlled) {
-        if (this.fullyControlled) fields[OBSERVATION_FIELD_ID['treated']] = this.fullyControlled == 'fully' ? 'Yes' : (this.fullyControlled == 'partially' ? 'Partially' : 'No')
-        if (this.dateControlled)  fields[OBSERVATION_FIELD_ID['dateControlled']] = this.dateControlled
+        var treated = this.fullyControlled == 'fully' ? 'Yes' : (this.fullyControlled == 'partially' ? 'Partially' : 'No')
+        if (treated                 != this.initialTreated)             fields[OBSERVATION_FIELD_ID['treated']] = treated
+        if (this.dateControlled)      fields[OBSERVATION_FIELD_ID['dateControlled']] = this.dateControlled
         if (this.controlMethod      != this.initialControlMethod)       fields[OBSERVATION_FIELD_ID['howTreated']] = this.controlMethod
         if (this.treatmentSubstance != this.initialTreatmentSubstance)  fields[OBSERVATION_FIELD_ID['treatmentSubstance']] = this.treatmentSubstance
         if (this.treatmentDetails   != this.initialTreatmentDetails)    fields[OBSERVATION_FIELD_ID['treatmentDetails']] = this.treatmentDetails
