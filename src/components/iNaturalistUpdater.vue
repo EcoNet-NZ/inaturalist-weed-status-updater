@@ -5,6 +5,7 @@ import Calendar from 'primevue/calendar';
 import Dropdown from 'primevue/dropdown';
 import Fieldset from 'primevue/fieldset';
 import InputText from 'primevue/inputtext';
+import ProgressSpinner from 'primevue/progressspinner';
 import RadioButton from 'primevue/radiobutton';
 </script>
 
@@ -86,8 +87,10 @@ import RadioButton from 'primevue/radiobutton';
       <p>No further details needed. Press button below to update.</p>
     </div>
     
+    <ProgressSpinner v-if="isLoading" />
+
     <div class="flex flex-column gap-3">
-      <Button @click="updateObservation" label="Update Observation" :disabled="!allFieldsValid" class="p-3 border-1 border-300 border-round bg-primary text-white font-medium" />
+      <Button @click="updateObservation" label="Update Observation" :disabled="isButtonDisabled" class="p-3 border-1 border-300 border-round bg-primary text-white font-medium" />
     </div>
     
     <div v-if="message" class="flex flex-column gap-3">
@@ -152,6 +155,8 @@ export default {
       effort: '',
 
       followUpDate: null,
+
+      isLoading: false,
 
       today: new Date(),
 
@@ -222,13 +227,22 @@ export default {
       }
       return true
     },
+    isButtonDisabled() {
+      return !!this.message || !this.allFieldsValid || this.isLoading
+    },
   },
 
   created: async function() {
     try {
       const url = new URL('https://api.inaturalist.org/v1/observations/' + this.observationId)
       console.log(url)
-      const response = await fetch(url)
+      var response
+      try {
+        this.isLoading = true
+        response = await fetch(url)
+      } finally {
+        this.isLoading = false
+      }
       
       if (!response.ok) {
         console.log(response)
@@ -306,15 +320,22 @@ export default {
         var jsonBody = this.createJsonBody()
         console.log(url)
         console.log('Sending body ' + jsonBody)
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-            //   'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: jsonBody
-          }
-        )
+        
+        var response
+        try {
+          this.isLoading = true
+          response = await fetch(url, {
+              method: "POST",
+              headers: {
+              //   'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: jsonBody
+            }
+          )
+        } finally {
+          this.isLoading = false
+        }
         
         const text = await response.text()
         console.log(text)

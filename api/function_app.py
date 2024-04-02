@@ -31,6 +31,7 @@ def update_observation_fields(json, access_token):
         return func.HttpResponse("No observation id in json body", 400)
 
     for key, value in json.items():
+        logging.info(f'Updating {key} to {value}')
         if key != 'observationId':
             data = {
                 "observation_field_value": {
