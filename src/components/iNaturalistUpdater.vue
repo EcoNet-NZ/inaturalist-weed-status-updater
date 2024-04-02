@@ -143,9 +143,13 @@ export default {
       result: '',
 
       fullyControlled: 'fully',
+
       controlMethod: '',
       treatmentSubstance: '',
       treatmentDetails: '',
+      initialControlMethod: '',
+      initialTreatmentSubstance: '',
+      initialTreatmentDetails: '',
 
       locationDetails: '',
       area: '',
@@ -153,8 +157,15 @@ export default {
       phenology: '',
       siteDifficulty: '',
       effort: '',
-
+      initialLocationDetails: '',
+      initialArea: '',
+      initialHeight: '',
+      initialPhenology: '',
+      initialSiteDifficulty: '',
+      initialEffort: '',
+      
       followUpDate: null,
+      initialFollowUpDate: null,
 
       isLoading: false,
 
@@ -253,6 +264,10 @@ export default {
       const json = await response.json()
       
       var ofvs = json.results[0].ofvs
+      this.controlMethod = this.getFieldValue(ofvs, 'howTreated')
+      this.treatmentSubstance = this.getFieldValue(ofvs, 'treatmentSubstance')
+      this.treatmentDetails = this.getFieldValue(ofvs, 'treatmentDetails')
+      
       this.locationDetails = this.getFieldValue(ofvs, 'locationDetails')
       this.area = this.getFieldValue(ofvs, 'area')
       this.height = this.getFieldValue(ofvs, 'height')
@@ -260,14 +275,22 @@ export default {
       this.siteDifficulty = this.getFieldValue(ofvs, 'siteDifficulty')
       this.effort = this.getFieldValue(ofvs, 'effort')
 
-      this.treated = this.getFieldValue(ofvs, 'treated')
-      this.controlMethod = this.getFieldValue(ofvs, 'howTreated')
-      this.treatmentSubstance = this.getFieldValue(ofvs, 'treatmentSubstance')
-      this.treatmentDetails = this.getFieldValue(ofvs, 'treatmentDetails')
-      
       var fud = this.getFieldValue(ofvs, 'followUpDate')
-      if (fud) this.followUpDate = fud
+      if (fud && fud != '(undef.)') this.followUpDate = fud
 
+      this.initialControlMethod = this.controlMethod
+      this.initialTreatmentSubstance = this.treatmentSubstance
+      this.initialTreatmentDetails = this.treatmentDetails
+      
+      this.initialLocationDetails = this.locationDetails
+      this.initialArea = this.area
+      this.initialHeight = this.height
+      this.initialPhenology = this.phenology
+      this.initialSiteDifficulty = this.siteDifficulty
+      this.initialEffort = this.effort
+
+      this.initialFollowUpDate = this.followUpDate
+      
     } catch (error) {
       this.message = "Error reading observation, please report to kiaora@ombfree.nz. " + error
       this.result = 'error'
@@ -287,20 +310,20 @@ export default {
       var fields = {observationId: this.observationId}
 
       if (this.controlled || this.alive) {
-        if (this.locationDetails)     fields[OBSERVATION_FIELD_ID['locationDetails']] = this.locationDetails
-        if (this.area)                fields[OBSERVATION_FIELD_ID['area']] = this.area
-        if (this.height)              fields[OBSERVATION_FIELD_ID['height']] = this.height
-        if (this.phenology)           fields[OBSERVATION_FIELD_ID['phenology']] = this.phenology
-        if (this.siteDifficulty)      fields[OBSERVATION_FIELD_ID['siteDifficulty']] = this.siteDifficulty
-        if (this.effort)              fields[OBSERVATION_FIELD_ID['effort']] = this.effort
-        if (this.followUpDate)        fields[OBSERVATION_FIELD_ID['followUpDate']] = this.monthOnly(this.followUpDate)
+        if (this.locationDetails    != this.initialLocationDetails)     fields[OBSERVATION_FIELD_ID['locationDetails']] = this.locationDetails
+        if (this.area               != this.initialArea)                fields[OBSERVATION_FIELD_ID['area']] = this.area
+        if (this.height             != this.initialHeight)              fields[OBSERVATION_FIELD_ID['height']] = this.height
+        if (this.phenology          != this.initialPhenology)           fields[OBSERVATION_FIELD_ID['phenology']] = this.phenology
+        if (this.siteDifficulty     != this.initialSiteDifficulty)      fields[OBSERVATION_FIELD_ID['siteDifficulty']] = this.siteDifficulty
+        if (this.effort             != this.initialEffort)              fields[OBSERVATION_FIELD_ID['effort']] = this.effort
+        if (this.followUpDate       != this.initialFollowUpDate)        fields[OBSERVATION_FIELD_ID['followUpDate']] = this.monthOnly(this.followUpDate)
       }
       if (this.controlled) {
-        if (this.fullyControlled)     fields[OBSERVATION_FIELD_ID['treated']] = this.fullyControlled == 'fully' ? 'Yes' : (this.fullyControlled == 'partially' ? 'Partially' : 'No')
-        if (this.dateControlled)      fields[OBSERVATION_FIELD_ID['dateControlled']] = this.dateControlled
-        if (this.controlMethod)       fields[OBSERVATION_FIELD_ID['howTreated']] = this.controlMethod
-        if (this.treatmentSubstance)  fields[OBSERVATION_FIELD_ID['treatmentSubstance']] = this.treatmentSubstance
-        if (this.treatmentDetails)    fields[OBSERVATION_FIELD_ID['treatmentDetails']] = this.treatmentDetails
+        if (this.fullyControlled) fields[OBSERVATION_FIELD_ID['treated']] = this.fullyControlled == 'fully' ? 'Yes' : (this.fullyControlled == 'partially' ? 'Partially' : 'No')
+        if (this.dateControlled)  fields[OBSERVATION_FIELD_ID['dateControlled']] = this.dateControlled
+        if (this.controlMethod      != this.initialControlMethod)       fields[OBSERVATION_FIELD_ID['howTreated']] = this.controlMethod
+        if (this.treatmentSubstance != this.initialTreatmentSubstance)  fields[OBSERVATION_FIELD_ID['treatmentSubstance']] = this.treatmentSubstance
+        if (this.treatmentDetails   != this.initialTreatmentDetails)    fields[OBSERVATION_FIELD_ID['treatmentDetails']] = this.treatmentDetails
       } else {
         if (this.dateOfStatusUpdate)  fields[OBSERVATION_FIELD_ID['dateOfStatusUpdate']] = this.dateOfStatusUpdate
         if (this.alive)               fields[OBSERVATION_FIELD_ID['statusUpdate']] = ALIVE_FIELD_VALUE
