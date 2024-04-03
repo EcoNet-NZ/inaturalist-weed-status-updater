@@ -89,11 +89,11 @@ import RadioButton from 'primevue/radiobutton';
     
     <ProgressSpinner v-if="isLoading" />
 
-    <div class="flex flex-column">
+    <div class="flex flex-column gap-3">
       <Button @click="updateObservation" label="Update Observation" :disabled="isButtonDisabled" class="p-3 border-1 border-300 border-round bg-primary text-white font-medium" />
     </div>
     
-    <div v-if="message" class="flex flex-column">
+    <div v-if="message" class="flex flex-column gap-3">
       <AlertBox :type="result">{{ message }}</AlertBox>
     </div>
 </template>
