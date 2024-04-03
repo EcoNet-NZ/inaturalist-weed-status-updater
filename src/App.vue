@@ -1,8 +1,9 @@
 <script setup>
 import iNaturalistUpdater from './components/iNaturalistUpdater.vue'
 import Calendar from 'primevue/calendar';
-import TabPanel from 'primevue/tabpanel';
-import TabView from 'primevue/tabview';
+import RadioButton from 'primevue/radiobutton';
+// import TabPanel from 'primevue/tabpanel';
+// import TabView from 'primevue/tabview';
 </script>
 
 <template>
@@ -21,8 +22,30 @@ import TabView from 'primevue/tabview';
             <span v-if="!visitDateValid">Visit date is required.</span>
           </div>
         </div>
-        
-        <TabView>
+
+        <div class="flex align-items-center gap-2">
+          <label class="font-medium text-900 w-6rem mb-3 label-align">Is this weed:</label>
+          <div class="inline-flex">
+            <div class="field-radiobutton">
+              <RadioButton v-model="status" value="controlled" inputId="controlled" name="controlled" :disabled="disableRadioButtons" />
+              <label for="controlled" class="ml-2 label-align">Controlled</label>
+            </div>
+            <div class="field-radiobutton">
+              <RadioButton v-model="status" value="alive" inputId="alive" name="alive" :disabled="disableRadioButtons" />
+              <label for="alive" class="ml-2 label-align">Alive</label>
+            </div>
+            <div class="field-radiobutton">
+              <RadioButton v-model="status" value="dead" inputId="dead" name="dead" :disabled="disableRadioButtons" />
+              <label for="dead" class="ml-2 label-align">Dead</label>
+            </div>
+          </div>
+        </div>
+
+        <iNaturalistUpdater v-if="status === 'controlled'" @update-requested="disableRadioButtons = true" :controlled=true :observation-id="observationId" :code="code" :date-controlled="dateOnly(visitDate)"></iNaturalistUpdater>
+        <iNaturalistUpdater v-if="status === 'alive'" @update-requested="disableRadioButtons = true" :alive=true :observation-id="observationId" :code="code" :date-of-status-update="dateOnly(visitDate)"></iNaturalistUpdater>
+        <iNaturalistUpdater v-if="status === 'dead'" @update-requested="disableRadioButtons = true" :dead=true :observation-id="observationId" :code="code" :date-of-status-update="dateOnly(visitDate)"></iNaturalistUpdater>
+
+        <!-- <TabView>
           <TabPanel header="Controlled">
             <div class="flex flex-column gap-3">
                 <iNaturalistUpdater :controlled=true :observation-id="observationId" :code="code" :date-controlled="dateOnly(visitDate)"></iNaturalistUpdater>
@@ -30,13 +53,12 @@ import TabView from 'primevue/tabview';
           </TabPanel>
           <TabPanel header="Alive">
             <div class="flex flex-column gap-3">
-              <iNaturalistUpdater :alive=true :observation-id="observationId" :code="code" :date-of-status-update="dateOnly(visitDate)"></iNaturalistUpdater>
             </div>
           </TabPanel>
           <TabPanel header="Dead / Not Present">
               <iNaturalistUpdater :dead=true :observation-id="observationId" :code="code" :date-of-status-update="dateOnly(visitDate)"></iNaturalistUpdater>
           </TabPanel>
-        </TabView>
+        </TabView> -->
       </div>
     </div>
   </div>
@@ -63,6 +85,8 @@ export default {
       email: '',
       password: '',
       visitDate: new Date(),
+      status: '',
+      disableRadioButtons: false,
 
       today: new Date(),
     }
@@ -81,3 +105,14 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.inline-flex {
+  display: inline-flex;
+  align-items: center;
+}
+
+.inline-flex > div {
+  margin-right: 1rem;
+}
+</style>

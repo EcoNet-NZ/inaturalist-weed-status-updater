@@ -10,7 +10,7 @@ import RadioButton from 'primevue/radiobutton';
 </script>
 
 <template>
-    <Fieldset v-if="controlled" legend="Control Details" :toggleable="true" class="p-0 m-0">
+    <Fieldset v-if="controlled" legend="Control Details" :toggleable="true" class="p-0 m-0 mb-3">
       <div class="flex align-items-center gap-2">
         <label class="font-medium text-900 w-6rem mb-3 label-align">Controlled?</label>
         <div class="inline-flex">
@@ -69,14 +69,14 @@ import RadioButton from 'primevue/radiobutton';
         <Dropdown v-model="siteDifficulty" :options="siteDifficulties" optionLabel="name" optionValue="code" class="p-2 border-1 border-300 border-round w-full" />
       </div>
 
-      <div class="flex align-items-center gap-2 mb-3" >
+      <div class="flex align-items-center gap-2" >
         <label for="effort" class="font-medium text-900 w-6rem" >Likely Effort</label>
         <Dropdown v-model="effort" :options="efforts" optionLabel="name" optionValue="code" class="p-2 border-1 border-300 border-round w-full" />
       </div>
 
     </Fieldset>
 
-    <div v-if="controlled || alive" class="flex flex-column gap-3">
+    <div v-if="controlled || alive" class="flex flex-column gap-3 mt-3">
       <div class="pb-4 flex align-items-center gap-2">
         <label for="follow-up-date" class="font-medium text-900 w-6rem">Follow-up Month</label>
         <Calendar id="follow-up-date" v-model="followUpDate" dateFormat="mm/yy" view="month" :minDate="today" class="w-full pl-3" />
@@ -89,11 +89,11 @@ import RadioButton from 'primevue/radiobutton';
     
     <ProgressSpinner v-if="isLoading" />
 
-    <div class="flex flex-column gap-3">
+    <div class="flex flex-column">
       <Button @click="updateObservation" label="Update Observation" :disabled="isButtonDisabled" class="p-3 border-1 border-300 border-round bg-primary text-white font-medium" />
     </div>
     
-    <div v-if="message" class="flex flex-column gap-3">
+    <div v-if="message" class="flex flex-column">
       <AlertBox :type="result">{{ message }}</AlertBox>
     </div>
 </template>
@@ -350,6 +350,7 @@ export default {
         var response
         try {
           this.isLoading = true
+          this.$emit('update-requested')
           response = await fetch(url, {
               method: "POST",
               headers: {
