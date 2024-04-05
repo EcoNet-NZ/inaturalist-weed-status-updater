@@ -341,10 +341,8 @@ export default {
         if (this.locationDetails    != this.initialLocationDetails)     fields[OBSERVATION_FIELD_ID['locationDetails']] = this.locationDetails
         if (this.area               != this.initialArea)                fields[OBSERVATION_FIELD_ID['area']] = this.area
         if (this.height             != this.initialHeight)              fields[OBSERVATION_FIELD_ID['height']] = this.height
-        if (this.phenology          != this.initialPhenology)           fields[OBSERVATION_FIELD_ID['phenology']] = this.phenology
         if (this.siteDifficulty     != this.initialSiteDifficulty)      fields[OBSERVATION_FIELD_ID['siteDifficulty']] = this.siteDifficulty
         if (this.effort             != this.initialEffort)              fields[OBSERVATION_FIELD_ID['effort']] = this.effort
-        if (this.followUpDate       != this.initialFollowUpDate)        fields[OBSERVATION_FIELD_ID['followUpDate']] = this.monthOnly(this.followUpDate)
       }
       if (this.controlled) {
         var treated = this.fullyControlled == 'fully' ? 'Yes' : (this.fullyControlled == 'partially' ? 'Partially' : 'No')
@@ -358,6 +356,8 @@ export default {
         if (this.alive)               fields[OBSERVATION_FIELD_ID['statusUpdate']] = ALIVE_FIELD_VALUE
         if (this.dead)                fields[OBSERVATION_FIELD_ID['statusUpdate']] = DEAD_FIELD_VALUE
       }
+      if (this.phenology          != this.initialPhenology)           fields[OBSERVATION_FIELD_ID['phenology']] = this.phenology
+      if (this.followUpDate       != this.initialFollowUpDate)        fields[OBSERVATION_FIELD_ID['followUpDate']] = this.monthOnly(this.followUpDate)
       console.log('Fields:' + fields)
       var jsonBody = JSON.stringify(fields)
       console.log('Body: ' + jsonBody)
