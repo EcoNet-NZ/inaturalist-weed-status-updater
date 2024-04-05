@@ -1,7 +1,7 @@
 <script setup>
 import AlertBox from './AlertBox';
 import Button from 'primevue/button';
-import Calendar from 'primevue/calendar';
+// import Calendar from 'primevue/calendar';
 import Dropdown from 'primevue/dropdown';
 import Fieldset from 'primevue/fieldset';
 import InputText from 'primevue/inputtext';
@@ -60,7 +60,7 @@ import RadioButton from 'primevue/radiobutton';
       </div>
 
       <div class="flex align-items-center gap-2 mb-3" >
-        <label for="phenology" class="font-medium text-900 w-6rem" >Stage</label>
+        <label for="phenology" class="font-medium text-900 w-6rem" >Growth Stage</label>
         <Dropdown v-model="phenology" :options="phenologies" optionLabel="name" optionValue="code" class="p-2 border-1 border-300 border-round w-full" />
       </div>
 
@@ -76,17 +76,30 @@ import RadioButton from 'primevue/radiobutton';
 
     </Fieldset>
 
-    <div v-if="controlled || alive" class="flex flex-column gap-3 mt-3">
+    <div v-if="dead" class="flex align-items-center gap-2">
+      <div class="flex align-items-center gap-2">
+        <label class="font-medium text-900 w-6rem mb-3 label-align">Seeds Dispersed?</label>
+        <div class="inline-flex">
+          <div class="field-radiobutton">
+            <RadioButton v-model="phenology" value="seed dispersed" inputId="seed-yes" name="seedDispersed" />
+            <label for="seed-yes" class="ml-2 label-align">Yes</label>
+          </div>
+          <div class="field-radiobutton">
+            <RadioButton v-model="phenology" value="not recorded" inputId="seed-no" name="seedDispersed" />
+            <label for="seed-no" class="ml-2 label-align">No</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="flex flex-column gap-3 mt-3">
       <div class="pb-4 flex align-items-center gap-2">
         <label for="follow-up-date" class="font-medium text-900 w-6rem">Follow-up Month</label>
-        <Calendar id="follow-up-date" v-model="followUpDate" dateFormat="mm/yy" view="month" :minDate="today" class="w-full pl-3" />
+        <Dropdown v-model="followUpDate" :options="followUpDates" optionLabel="month" optionValue="month" class="p-2 border-1 border-300 border-round w-full" /> 
+        <!-- <Calendar id="follow-up-date" v-model="followUpDate" dateFormat="mm/yy" view="month" :minDate="today" class="w-full pl-3" /> -->
       </div>
     </div>
 
-    <div v-if="dead" class="flex align-items-center gap-2">
-      <p>No further details needed. Press button below to update.</p>
-    </div>
-    
     <ProgressSpinner v-if="isLoading" />
 
     <div class="flex flex-column gap-3">
@@ -217,6 +230,18 @@ export default {
         { name: 'Four person hours',      code: '4 = Four person hours' },
         { name: 'Five+ person hours',     code: '5 = Five+ person hours' },
       ],
+      followUpDates: [
+        { month: '2024-04' },
+        { month: '2024-05' },
+        { month: '2024-06' },
+        { month: '2024-09' },
+        { month: '2024-12' },
+        { month: '2025-03' },
+        { month: '2025-06' },
+        { month: '2025-09' },
+        { month: '2025-12' },
+        // { month: '2026-12' },
+      ]
     };
   },
 
@@ -246,6 +271,7 @@ export default {
 
   created: async function() {
     try {
+      
       const url = new URL('https://api.inaturalist.org/v1/observations/' + this.observationId)
       console.log(url)
       var response
@@ -260,7 +286,7 @@ export default {
         console.log(response)
         console.log(response.status)
         console.log(response.ok)
-        throw new Error('Network response was not ok')
+        throw new Error('Unable to read observation ' + this.observationId + ' from iNaturalist')
       }
       const json = await response.json()
       
@@ -294,7 +320,7 @@ export default {
       this.initialFollowUpDate = this.followUpDate
       
     } catch (error) {
-      this.message = "Error reading observation, please report to kiaora@ombfree.nz. " + error
+      this.message = error + ", please report to kiaora@ombfree.nz."
       this.result = 'error'
       console.error('Error fetching data:', error)
     }
