@@ -231,7 +231,7 @@ export default {
         { name: 'Five+ person hours',     code: '5 = Five+ person hours' },
       ],
       followUpDates: [
-        { month: '2024-04' },
+        // { month: '2024-04' },
         { month: '2024-05' },
         { month: '2024-06' },
         { month: '2024-09' },
