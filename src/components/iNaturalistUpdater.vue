@@ -76,23 +76,7 @@ import RadioButton from 'primevue/radiobutton';
 
     </Fieldset>
 
-    <div v-if="dead" class="flex align-items-center gap-2">
-      <div class="flex align-items-center gap-2">
-        <label class="font-medium text-900 w-6rem mb-3 label-align">Seeds Dispersed?</label>
-        <div class="inline-flex">
-          <div class="field-radiobutton">
-            <RadioButton v-model="phenology" value="seed dispersed" inputId="seed-yes" name="seedDispersed" />
-            <label for="seed-yes" class="ml-2 label-align">Yes</label>
-          </div>
-          <div class="field-radiobutton">
-            <RadioButton v-model="phenology" value="not recorded" inputId="seed-no" name="seedDispersed" />
-            <label for="seed-no" class="ml-2 label-align">No</label>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="flex flex-column gap-3 mt-3">
+    <div v-if="controlled || alive" class="flex flex-column gap-3 mt-3">
       <div class="pb-4 flex align-items-center gap-2">
         <label for="follow-up-date" class="font-medium text-900 w-6rem">Follow-up Month</label>
         <Dropdown v-model="followUpDate" :options="followUpDates" optionLabel="month" optionValue="month" class="p-2 border-1 border-300 border-round w-full" /> 
@@ -343,6 +327,8 @@ export default {
         if (this.height             != this.initialHeight)              fields[OBSERVATION_FIELD_ID['height']] = this.height
         if (this.siteDifficulty     != this.initialSiteDifficulty)      fields[OBSERVATION_FIELD_ID['siteDifficulty']] = this.siteDifficulty
         if (this.effort             != this.initialEffort)              fields[OBSERVATION_FIELD_ID['effort']] = this.effort
+        if (this.phenology          != this.initialPhenology)           fields[OBSERVATION_FIELD_ID['phenology']] = this.phenology
+        if (this.followUpDate       != this.initialFollowUpDate)        fields[OBSERVATION_FIELD_ID['followUpDate']] = this.monthOnly(this.followUpDate)
       }
       if (this.controlled) {
         var treated = this.fullyControlled == 'fully' ? 'Yes' : (this.fullyControlled == 'partially' ? 'Partially' : 'No')
@@ -356,8 +342,6 @@ export default {
         if (this.alive)               fields[OBSERVATION_FIELD_ID['statusUpdate']] = ALIVE_FIELD_VALUE
         if (this.dead)                fields[OBSERVATION_FIELD_ID['statusUpdate']] = DEAD_FIELD_VALUE
       }
-      if (this.phenology          != this.initialPhenology)           fields[OBSERVATION_FIELD_ID['phenology']] = this.phenology
-      if (this.followUpDate       != this.initialFollowUpDate)        fields[OBSERVATION_FIELD_ID['followUpDate']] = this.monthOnly(this.followUpDate)
       console.log('Fields:' + fields)
       var jsonBody = JSON.stringify(fields)
       console.log('Body: ' + jsonBody)
