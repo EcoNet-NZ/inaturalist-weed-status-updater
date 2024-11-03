@@ -121,6 +121,7 @@ const OBSERVATION_FIELD_ID = {
 }
 const ALIVE_FIELD_VALUE = 'Alive / Regrowth'
 const DEAD_FIELD_VALUE = 'Dead / Not Present' 
+const DUPLICATE_FIELD_VALUE = 'Duplicate' 
 
 export default {
   name: 'ObservationReader',
@@ -131,7 +132,8 @@ export default {
     dateOfStatusUpdate: String,
     controlled: Boolean,
     alive: Boolean,
-    dead: Boolean
+    dead: Boolean,
+    duplicate: Boolean
   },
 
   data() {
@@ -240,7 +242,7 @@ export default {
       if (this.controlled && !this.dateControlled) {
         return false
       }
-      if ((this.alive || this.dead) && !this.dateOfStatusUpdate) {
+      if ((this.alive || this.dead || this.duplicate) && !this.dateOfStatusUpdate) {
         return false
       }
       if (this.controlled) {
@@ -341,6 +343,7 @@ export default {
         if (this.dateOfStatusUpdate)  fields[OBSERVATION_FIELD_ID['dateOfStatusUpdate']] = this.dateOfStatusUpdate
         if (this.alive)               fields[OBSERVATION_FIELD_ID['statusUpdate']] = ALIVE_FIELD_VALUE
         if (this.dead)                fields[OBSERVATION_FIELD_ID['statusUpdate']] = DEAD_FIELD_VALUE
+        if (this.duplicate)           fields[OBSERVATION_FIELD_ID['statusUpdate']] = DUPLICATE_FIELD_VALUE
       }
       console.log('Fields:' + fields)
       var jsonBody = JSON.stringify(fields)
