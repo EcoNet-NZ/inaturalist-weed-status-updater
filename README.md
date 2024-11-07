@@ -1,10 +1,12 @@
 # iNaturalist Weed Status Updater
 
-The iNaturalist Weed Status Updater is a web app that sets specific observation field values on iNaturalist observations. The observation fields are defined in the [Weed Management Aotearoa NZ iNaturalist](https://www.inaturalist.org/projects/weed-management-aotearoa-nz) project which is used for defining and managing the status of weed plants.
+The iNaturalist Weed Status Updater is a web app that sets specific observation field values on iNaturalist observations. The observation fields are defined in the [Weed Management Aotearoa NZ iNaturalist](https://www.inaturalist.org/projects/weed-management-aotearoa-nz) iNaturalist project which is used for defining and managing the status of weed plants.
 
-The user must authenticate with iNaturalist using their individual iNaturalist profile which authorises them to set the observation field values. 
+The user must authenticate with iNaturalist using their individual iNaturalist profile which authorises them to set the observation field values.
 
 ## User View
+
+![image](https://github.com/user-attachments/assets/87bee0c4-7bb4-4715-9620-3be8058504e6)
 
 1. The iNaturalist to CAMS synchroniser performs an hourly update of CAMS with any new or modfied observations. 
 
