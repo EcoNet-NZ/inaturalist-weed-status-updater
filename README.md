@@ -2,13 +2,13 @@
 
 The iNaturalist Weed Status Updater is a web app that sets specific observation field values on iNaturalist observations. The user must authenticate with iNaturalist using their individual iNaturalist profile which authorises them to set the observation field values.
 
-The observation fields used in this project are defined in the [Weed Management Aotearoa NZ iNaturalist](https://www.inaturalist.org/projects/weed-management-aotearoa-nz) iNaturalist project which is used for defining and managing the status of weed plants.
+The observation fields used in this project are defined in the [Weed Management Aotearoa NZ iNaturalist](https://www.inaturalist.org/projects/weed-management-aotearoa-nz) iNaturalist project which is used for defining and managing the status of weed plants. It is used in conjunction with EcoNet's [CAMS](https://econet.nz/our-projects/) Weeds Map, an ArcGIS map which displays weed instances, some of which are sourced from iNaturalist observations.
 
 ## User View
 
 ![image](https://github.com/user-attachments/assets/87bee0c4-7bb4-4715-9620-3be8058504e6)
 
-1. The [**iNaturalist to CAMS synchroniser**](https://github.com/EcoNet-NZ/inaturalist-to-cams) performs an hourly update of CAMS with any new or modfied observations. 
+1. The [**iNaturalist to CAMS synchroniser**](https://github.com/EcoNet-NZ/inaturalist-to-cams) performs an hourly update to the CAMS Weeds Map with any new or modfied observations of interest.
 
 1. In **CAMS**, when clicking on a weed instance that has been synchronised from iNaturalist, the pop-up shows an "Update weed status" button.
 
@@ -108,7 +108,7 @@ Should you wish to clone and modify this project, you'll also need to:
     
 * Create a new Azure Static Web App to use for your application.
 
-* Set up the environment variables for the iNaturalist `CLIENT_ID` and `CLIENT_SECRET` obtained from iNaturalist (above) and the `REDIRECT_URI` environment variable to the external URL of the Static Web App (e.g. `https://[unique-id].azurestaticapps.net`).
+* Set up the environment variables for the iNaturalist `CLIENT_ID` and `CLIENT_SECRET` obtained from iNaturalist (above) and the `REDIRECT_URI` environment variable to the external URL of the Static Web App (e.g. `https://[unique-id].azurestaticapps.net`). See [how to set environment variables in the Azure portal](https://learn.microsoft.com/en-us/azure/static-web-apps/application-settings).
 
 ### Set the redirect uri on the iNaturalist application
 * Edit the iNaturalist application and update the redirect URI to the external URL of the Static Web App (e.g. `https://[unique-id].azurestaticapps.net`).
@@ -120,7 +120,7 @@ Should you wish to clone and modify this project, you'll also need to:
 * Merging the pull request into your main branch will deploy the updated app to your production URL.
 
 ### Construct a URL to call your application
-Construct the URL to start the flow at step 3 of the sequence diagram above. Given the `<client id>` from iNaturalist, the encoded URL of the Static Web App as `<redirect uri>` (i.e. `https://` replaced with `https%3A%2F%2F`) and the `<observation id>` of the observation you want to update, the URL will be:
+Construct the URL to start the flow at step 3 of the sequence diagram above. Given the `<client id>` from iNaturalist, the encoded URL (i.e. `https://` replaced with `https%3A%2F%2F`) of the Static Web App as `<redirect uri>` and the `<observation id>` of the observation you want to update, the URL will be:
 `https://www.inaturalist.org/oauth/authorize?client_id=<client id>&redirect_uri=<redirect uri>&response_type=code&state=<observation id>`
 
 ## Hints
