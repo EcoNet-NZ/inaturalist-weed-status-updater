@@ -1,8 +1,8 @@
 # iNaturalist Weed Status Updater
 
-The iNaturalist Weed Status Updater is a web app that sets specific observation field values on iNaturalist observations. The observation fields are defined in the [Weed Management Aotearoa NZ iNaturalist](https://www.inaturalist.org/projects/weed-management-aotearoa-nz) iNaturalist project which is used for defining and managing the status of weed plants.
+The iNaturalist Weed Status Updater is a web app that sets specific observation field values on iNaturalist observations. The user must authenticate with iNaturalist using their individual iNaturalist profile which authorises them to set the observation field values.
 
-The user must authenticate with iNaturalist using their individual iNaturalist profile which authorises them to set the observation field values.
+The observation fields used in this project are defined in the [Weed Management Aotearoa NZ iNaturalist](https://www.inaturalist.org/projects/weed-management-aotearoa-nz) iNaturalist project which is used for defining and managing the status of weed plants.
 
 ## User View
 
@@ -12,9 +12,9 @@ The user must authenticate with iNaturalist using their individual iNaturalist p
 
 1. In **CAMS**, when clicking on a weed instance that has been synchronised from iNaturalist, the pop-up shows an "Update weed status" button.
 
-1. In **CAMS**, clicking on the "Update weed status" button calls the **iNaturalist Weed Status Updater**, which authorises the user using iNaturalist. If the user is not logged into iNaturalist, iNaturalist prompts the user for their credentials. The iNaturalist Weed Status Updater web app is then displayed.
+1. In **CAMS**, clicking on the "Update weed status" button calls the **iNaturalist Weed Status Updater**, which authorises the user using iNaturalist. If the user is not logged into iNaturalist, iNaturalist prompts the user for their credentials. 
 
-1. After filling in the fields on the **iNaturalist Weed Status Updater**, the user clicks on the "Update Observation" button which then updates the relevant iNaturalist observation fields as the logged-in iNaturalist user.
+1. The **iNaturalist Weed Status Updater web app** is then displayed. After filling in the fields, the user clicks on the "Update Observation" button which then updates the relevant iNaturalist observation fields as the logged-in iNaturalist user.
 
 ## System View
 
@@ -118,6 +118,10 @@ Should you wish to clone and modify this project, you'll also need to:
 * Update the code as required.
 * Creating a pull request on GitHub will generate a staging version of your app enabling a preview version of your site before publishing it. It won't be fully hooked up to iNaturalist since we have used the production URL as the redirect URI.
 * Merging the pull request into your main branch will deploy the updated app to your production URL.
+
+### Construct a URL to call your application
+Construct the URL to start the flow at step 3 of the sequence diagram above. Given the `<client id>` from iNaturalist, the encoded URL of the Static Web App as `<redirect uri>` (i.e. `https://` replaced with `https%3A%2F%2F`) and the `<observation id>` of the observation you want to update, the URL will be:
+`https://www.inaturalist.org/oauth/authorize?client_id=<client id>&redirect_uri=<redirect uri>&response_type=code&state=<observation id>`
 
 ## Hints
 * `App.vue` contains the web app entry point and template, which then includes `iNaturalistUpdater` components.
