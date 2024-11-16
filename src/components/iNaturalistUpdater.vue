@@ -1,6 +1,6 @@
 <!--
 ====================================================================
-Copyright 2023 EcoNet.NZ
+Copyright 2024   EcoNet.NZ
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -336,18 +336,30 @@ export default {
         return null
       return arr[0].value
     },
+
+    addFieldIfNewOrModified(originalField, currentField, fields, fieldName) {
+      if (currentField != originalField) fields[OBSERVATION_FIELD_ID[fieldName]] = currentField
+    },
     
     createJsonBody() {
       var fields = {observationId: this.observationId}
 
       if (this.controlled || this.alive) {
-        if (this.locationDetails    != this.initialLocationDetails)     fields[OBSERVATION_FIELD_ID['locationDetails']] = this.locationDetails
-        if (this.area               != this.initialArea)                fields[OBSERVATION_FIELD_ID['area']] = this.area
-        if (this.height             != this.initialHeight)              fields[OBSERVATION_FIELD_ID['height']] = this.height
-        if (this.siteDifficulty     != this.initialSiteDifficulty)      fields[OBSERVATION_FIELD_ID['siteDifficulty']] = this.siteDifficulty
-        if (this.effort             != this.initialEffort)              fields[OBSERVATION_FIELD_ID['effort']] = this.effort
-        if (this.phenology          != this.initialPhenology)           fields[OBSERVATION_FIELD_ID['phenology']] = this.phenology
-        if (this.followUpDate       != this.initialFollowUpDate)        fields[OBSERVATION_FIELD_ID['followUpDate']] = this.monthOnly(this.followUpDate)
+        this.addFieldIfNewOrModified(this.initialLocationDetails, this.locationDetails, fields, 'locationDetails')
+        this.addFieldIfNewOrModified(this.initialArea,            this.area,            fields, 'area')
+        this.addFieldIfNewOrModified(this.initialHeight,          this.height,          fields, 'height')
+        this.addFieldIfNewOrModified(this.initialSiteDifficulty,  this.siteDifficulty,  fields, 'siteDifficulty')
+        this.addFieldIfNewOrModified(this.initialEffort,          this.effort,          fields, 'effort')
+        this.addFieldIfNewOrModified(this.initialPhenology,       this.phenology,       fields, 'phenology')
+        this.addFieldIfNewOrModified(this.initialFollowUpDate,    this.monthOnly(this.followUpDate),    fields, 'followUpDate')
+
+        // if (this.locationDetails    != this.initialLocationDetails)     fields[OBSERVATION_FIELD_ID['locationDetails']] = this.locationDetails
+        // if (this.area               != this.initialArea)                fields[OBSERVATION_FIELD_ID['area']] = this.area
+        // if (this.height             != this.initialHeight)              fields[OBSERVATION_FIELD_ID['height']] = this.height
+        // if (this.siteDifficulty     != this.initialSiteDifficulty)      fields[OBSERVATION_FIELD_ID['siteDifficulty']] = this.siteDifficulty
+        // if (this.effort             != this.initialEffort)              fields[OBSERVATION_FIELD_ID['effort']] = this.effort
+        // if (this.phenology          != this.initialPhenology)           fields[OBSERVATION_FIELD_ID['phenology']] = this.phenology
+        // if (this.followUpDate       != this.initialFollowUpDate)        fields[OBSERVATION_FIELD_ID['followUpDate']] = this.monthOnly(this.followUpDate)
       }
       if (this.controlled) {
         var treated = this.fullyControlled == 'fully' ? 'Yes' : (this.fullyControlled == 'partially' ? 'Partially' : 'No')
