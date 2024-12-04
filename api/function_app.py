@@ -20,8 +20,10 @@ import os
 
 TOKEN_URL = 'https://www.inaturalist.org/oauth/token'
 CREATE_OFV_URL = 'https://api.inaturalist.org/v1/observation_field_values'
+ADD_TO_WMANZ_PROJECT_URL = 'https://api.inaturalist.org/v1/projects/147177/add'
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
+
 
 def get_access_token(authorization_code):
     data = {
@@ -35,7 +37,8 @@ def get_access_token(authorization_code):
     if response.status_code == 200:
         return response.json()['access_token']
     else:
-        return None    
+        return None
+
 
 def update_observation_fields(json, access_token):
     api_call_headers = {'Authorization': 'Bearer ' + access_token}
@@ -64,8 +67,24 @@ def update_observation_fields(json, access_token):
         except Exception as e:
             logging.error(e)
             return func.HttpResponse(e, 500)
-        
+
     return func.HttpResponse(f"Yay! The iNaturalist observation was updated {response}!")
+
+
+def add_to_wmanz_project(access_token):
+    api_call_headers = {'Authorization': 'Bearer ' + access_token}
+
+    try:
+        observation_id = json['observationId']
+    except:
+        return func.HttpResponse("No observation id in json body", 400)
+
+    data = {
+        "observation_id": observation_id
+    }
+
+    response = requests.post(CREATE_OFV_URL, json=data, headers=api_call_headers)
+    response.raise_for_status()
 
 
 @app.route(route="update", methods=(func.HttpMethod.POST,))
@@ -76,7 +95,7 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
         authorization_code = req.params.get('auth-code')
     except:
         return func.HttpResponse("Unable to read 'auth-code' parameter", 400)
-    
+
     if not authorization_code:
         return func.HttpResponse("Missing parameter 'auth-code'", 400)
 
@@ -84,11 +103,18 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
         access_token = get_access_token(authorization_code)
     except:
         return func.HttpResponse("Unable to get authorization code", 401)
-        
+
     try:
         json = req.get_json()
         logging.info(f'Request body: {json}')
     except:
         return func.HttpResponse("Unable to parse json body", 400)
-    
+
+    try:
+        add_to_wmanz_project(access_token)
+        logging.info(f'Added to WMANZ project')
+    except Exception as e:
+        logging.error(e)
+        return func.HttpResponse("Unable to add tto WMANZ project: " + e, 500)
+
     return update_observation_fields(json, access_token)
