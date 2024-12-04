@@ -20,7 +20,7 @@ import os
 
 TOKEN_URL = 'https://www.inaturalist.org/oauth/token'
 CREATE_OFV_URL = 'https://api.inaturalist.org/v1/observation_field_values'
-ADD_TO_WMANZ_PROJECT_URL = 'https://api.inaturalist.org/v1/projects/147177/add'
+ADD_TO_PROJECT_URL = 'https://api.inaturalist.org/v1/project_observations'
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
@@ -80,10 +80,11 @@ def add_to_wmanz_project(json, access_token):
         return func.HttpResponse("No observation id in json body", 400)
 
     data = {
+        "project_id": 147177,
         "observation_id": observation_id
     }
 
-    response = requests.post(ADD_TO_WMANZ_PROJECT_URL, json=data, headers=api_call_headers)
+    response = requests.post(ADD_TO_PROJECT_URL, json=data, headers=api_call_headers)
     response.raise_for_status()
 
 
