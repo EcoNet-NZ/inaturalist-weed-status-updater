@@ -83,7 +83,7 @@ def add_to_wmanz_project(access_token):
         "observation_id": observation_id
     }
 
-    response = requests.post(CREATE_OFV_URL, json=data, headers=api_call_headers)
+    response = requests.post(ADD_TO_WMANZ_PROJECT_URL, json=data, headers=api_call_headers)
     response.raise_for_status()
 
 
