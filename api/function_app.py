@@ -71,7 +71,7 @@ def update_observation_fields(json, access_token):
     return func.HttpResponse(f"Yay! The iNaturalist observation was updated {response}!")
 
 
-def add_to_wmanz_project(access_token):
+def add_to_wmanz_project(json, access_token):
     api_call_headers = {'Authorization': 'Bearer ' + access_token}
 
     try:
@@ -111,7 +111,7 @@ def update(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse("Unable to parse json body", 400)
 
     try:
-        add_to_wmanz_project(access_token)
+        add_to_wmanz_project(json, access_token)
         logging.info(f'Added to WMANZ project')
     except Exception as e:
         logging.error(e)
