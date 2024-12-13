@@ -1,30 +1,28 @@
 # iNaturalist Weed Status Updater
 
 ## Overview
-The **iNaturalist Weed Status Updater** is a user-friendly web app that helps users manage weed status effectively. It accomplishes this by integrating [CAMS Weed Map](https://econet.nz/our-projects/) and iNaturalist's robust ecosystem.
+The **iNaturalist Weed Status Updater** is a user-friendly web app that helps users update weed status on iNaturalist effectively. While it has been developed for use with EcoNet's [CAMS](https://econet.nz/our-projects/) Weeds Map, it is more widely applicable for any system storing weed data in Aotearoa/New Zealand using iNaturalist.
 
 ## How it works
-The user authenticates using their credentials in the [Weed Management Aotearoa NZ iNaturalist](https://www.inaturalist.org/projects/weed-management-aotearoa-nz). The authenticated user is  then authorised to set the observation field data values which is used for defining and managing the status of weed plants. An ArcGIS map displays the geolocation of the weed instances courtesy of EcoNet's [CAMS](https://econet.nz/our-projects/) Weeds Map.
+The user authenticates using their iNaturalist credentials. The authenticated user is then authorised to update the observation. The **iNaturalist Weed Status Updater** prompts the user for the weed status and details, then adds the selected observation to the [Weed Management Aotearoa NZ](https://www.inaturalist.org/projects/weed-management-aotearoa-nz) iNaturalist project and sets the observation field values using the weed status and details.
 
 ## Key Features
-- **OAuth2 Authentication**: Ensures secure access to iNaturalist accounts.
-- **CRUD Field Updates**: Modify observation fields, such as weed control status, directly from the web app.
-- **API Integration**: Works seamlessly with CAMS and iNaturalist data for improved weed management.
+- **OAuth2 Authentication**: Ensures secure access to iNaturalist accounts. iNaturalist stores user details with the updated observation fields.
+- **iNaturalist API Integration**: Modifies observation fields, such as weed control status, directly from the web app.
 
 ---
 ## User Interaction View
+This image shows how the updater integrates with **CAMS**. Other weed management systems can adopt similar workflows.
 
 ![image](https://github.com/user-attachments/assets/87bee0c4-7bb4-4715-9620-3be8058504e6)
 
-1. The [**iNaturalist to CAMS synchroniser**](https://github.com/EcoNet-NZ/inaturalist-to-cams) automatically updates the CAMS Weeds Map hourly with any inputted observation data from iNaturalist.
+1. The [**iNaturalist to CAMS synchroniser**](https://github.com/EcoNet-NZ/inaturalist-to-cams) automatically updates the **CAMS** Weeds Map hourly with any new or modfied observations of interest.
 
-2. Once the weed instance has fully synchronized from iNaturalist, an "Update weed status" button shows up when any weed instance is clicked on the **CAMS** Weeds Map.
+2. Clicking on an iNaturalist-sourced weed instance on the **CAMS** Weeds Map shows an "Update weed status" button on the pop-up menu.
 
-3. Once the "Update weed status" button is clicked, **CAMS** application calls the iNaturalist application through the **iNaturalist Weed Status Updater**, which authorises the user to update the weed status. Where the user is not authenticated, iNaturalist prompts the user to authenticate with their credentials. 
+3. Once the "Update weed status" button is clicked, the **CAMS** application calls the iNaturalist application through the **iNaturalist Weed Status Updater**, which authorises the user to update the weed status. Where the user is not authenticated, iNaturalist prompts the user to authenticate with their credentials. 
 
-4. The **iNaturalist Weed Status Updater** web form is then displayed where the observation fields are displayed which the user can update the weed status.
-
-5. Once changes are made to the fields, the user clicks on the "Update Observation" button which then updates the relevant iNaturalist observation fields and records the activity.
+4. The **iNaturalist Weed Status Updater** web form is then displayed allowing the user to set the weed status and details. Once changes are made to the fields, the user clicks on the "Update Observation" button which then adds the weed instance to the **Weed Management Aotearoa NZ** project and updates the relevant iNaturalist observation fields as the logged-in iNaturalist user.
 
 ## System View
 
@@ -83,12 +81,12 @@ sequenceDiagram
 
 Here's a description of the numbered steps on this sequence diagram:
 1. The user selects a Weed Instance on the **CAMS** Weeds Map (running on ArcGIS Field Map or Experience Builder).
-2. If the Weed Instance was sourced from iNaturalist (using the [iNaturalist to CAMS synchroniser](https://github.com/EcoNet-NZ/inaturalist-to-cams)), a pop-up shows an "Update Weed Status" button. 
+2. If the Weed Instance was sourced from iNaturalist (using the [iNaturalist to CAMS synchroniser](https://github.com/EcoNet-NZ/inaturalist-to-cams)), the pop-up shows the "Update Weed Status" button. 
 3. When the user clicks on this button, it performs a GET request to the **iNaturalist OAuth2 endpoint** with hardcoded `client id` and `redirect uri` parameters plus a `state` parameter containing the iNaturalist `observation id` of the Weed Instance.
-4. iNaturalist determines whether a new login is required. If so, iNaturalist returns the login HTML page. If not, jump to step 8.
+4. iNaturalist determines whether a new login is required. If so, iNaturalist returns the login page HTML. If not, jump to step 8.
 5. The iNaturalist login page is displayed on the browser.
 6. The user enters their username and password (assumed to be valid for this flow, otherwise an error is displayed and the flow stops).
-7. On submitting the username and password, the request is submitted as a `POST` method call to iNaturalist server.
+7. On submitting the username and password, the request is submitted as a `POST` method call to iNaturalist.
 8. iNaturalist redirects the user to the **iNaturalist Weed Status Updater web app**, through the `redirect_uri` parameter passed in step 3. The redirect parameters includes a `authorization code` generated by iNaturalist and a `state` token containing the observation id (passed in step 3). These two parameters are read in the `created: function()` of `App.vue`. The `App.vue` file also contains a template of the user interface with the header, visit `date` field and an `iNaturalistUpdater` component for each of the potential states (Contolled, Alive, Dead or Duplicate).
 9. The web app returns the Weed Status Updater HTML page.
 10. The browser displays the Weed Status Updater.
@@ -107,7 +105,7 @@ Here's a description of the numbered steps on this sequence diagram:
 Should you wish to clone and modify this project, you'll also need to:
 
 ### Set up iNaturalist application
-* Seek and obtain the right to create an [iNaturalist application](https://www.inaturalist.org/oauth/applications/new) from the author [nigelcharman](nigel.charman@econet.nz). In addition to filling out the form, your iNaturalist account must be at least 2 months old and you must have made at least 10 improving identifications over the last month. On certain instances, you will be required to provide an identification of a finer rank of Order towards improving other user's observations (not your own). 
+* Seek and obtain the right to create an [iNaturalist application](https://www.inaturalist.org/oauth/applications/new). In addition to filling out the form, your iNaturalist account must be at least 2 months old and you must have made at least 10 improving identifications over the last month. *I found I needed to add an identification of a finer rank of Order towards improving other user's observations (not your own).*
 * Once your request is approved, you can create the [iNaturalist application](https://www.inaturalist.org/oauth/applications/new). You'll want to add a placeholder for the Redirect URI until the web app is created. This can be updated later. Ensure you check ✅ the **CONFIDENTIAL** box (assuming you're storing the credentials securely, eg as Azure environment variables).
 * Store the client **ID** and **Secret** variables securely as the `CLIENT_ID` and `CLIENT_SECRET` environment variables on your machine, so you can try out the code locally. You'll also need to store these as Azure environment variables.
 
@@ -129,8 +127,8 @@ Should you wish to clone and modify this project, you'll also need to:
 * Creating a pull request on GitHub will generate a staging version of your app enabling a preview version of your site before publishing it. It won't be fully hooked up to iNaturalist since we have used the production URL as the redirect URI.
 * Merging the pull request into your main branch will deploy the updated app to your production URL.
 
-### Build a URL to call your application
-Build the URL to start the flow at step 3 of the sequence diagram above. Given the `<client id>` from iNaturalist, the encoded URL (i.e. `https://` replaced with `https%3A%2F%2F`) of the Static Web App as `<redirect uri>` and the `<observation id>` of the observation you want to update, the URL will be:
+### Construct a URL to call your application
+Construct the URL to start the flow at step 3 of the sequence diagram above. Given the `<client id>` from iNaturalist, the encoded URL (i.e. `https://` replaced with `https%3A%2F%2F`) of the Static Web App as `<redirect uri>` and the `<observation id>` of the observation you want to update, the URL will be:
 `https://www.inaturalist.org/oauth/authorize?client_id=<client id>&redirect_uri=<redirect uri>&response_type=code&state=<observation id>`
 
 ## Hints
