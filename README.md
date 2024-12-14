@@ -100,7 +100,7 @@ Here's a description of the numbered steps on this sequence diagram:
 13. The Function App reads the CLIENT_ID, CLIENT_SECRET and REDIRECT_URI from the Azure environment variables.
 14. The Function App POSTs these variables and the authorization code to the iNaturalist OAuth2 endpoint.
 15. The iNaturalist OAuth2 endpoint responds with the access token.
-16. The Function App POSTs the access token, observation id and **Weed Management Aotearoa NZ** project to the **iNaturalist API** `project_observations` endpoint to add the observation to this project.
+16. The Function App POSTs the access token, observation id and **Weed Management Aotearoa NZ** project id to the **iNaturalist API** `project_observations` endpoint to add the observation to this project.
 17. iNaturalist responds with a response code.
 18. For each observation field value, the Function App POSTs the access token, observation id, observation field id and the observation field value to the **iNaturalist API** `observation_field_values` endpoint.
 19. iNaturalist responds with a response code (for each observation field value call).
