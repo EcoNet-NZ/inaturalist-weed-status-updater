@@ -1,14 +1,17 @@
 # iNaturalist Weed Status Updater
 
 ## Overview
-The **iNaturalist Weed Status Updater** is a user-friendly web app that helps users update weed status on iNaturalist effectively. While it has been developed for use with EcoNet's [CAMS](https://econet.nz/our-projects/) Weeds Map, it is more widely applicable for any system storing weed data in Aotearoa/New Zealand using iNaturalist.
+The **iNaturalist Weed Status Updater** is a user-friendly web app that helps users update weed status on iNaturalist effectively. It enables users to add other user's observations to the [Weed Management Aotearoa NZ](https://www.inaturalist.org/projects/weed-management-aotearoa-nz) iNaturalist project and update observation fields on their observations. This is not possible with the iNaturalist mobile app and is clunky to achieve through the iNaturalist website.
+
+While it has been developed for use with EcoNet's [CAMS](https://econet.nz/our-projects/) Weeds Map, it is more widely applicable for any system storing weed data in Aotearoa/New Zealand using iNaturalist.
 
 ## How it works
-The user authenticates using their iNaturalist credentials. The authenticated user is then authorised to update the observation. The **iNaturalist Weed Status Updater** prompts the user for the weed status and details, then adds the selected observation to the [Weed Management Aotearoa NZ](https://www.inaturalist.org/projects/weed-management-aotearoa-nz) iNaturalist project and sets the observation field values using the weed status and details.
+The user authenticates using their iNaturalist credentials. The authenticated user is then authorised to update the observation. The **iNaturalist Weed Status Updater** prompts the user for the weed status and details, then adds the selected observation to the [Weed Management Aotearoa NZ](https://www.inaturalist.org/projects/weed-management-aotearoa-nz) iNaturalist project and sets the observation field values using the supplied weed status and details.
 
 ## Key Features
 - **OAuth2 Authentication**: Ensures secure access to iNaturalist accounts. iNaturalist stores user details with the updated observation fields.
 - **iNaturalist API Integration**: Modifies observation fields, such as weed control status, directly from the web app.
+- **Serverless implementation**: The solution uses Azure static web app and function app serverless components, so is at minimal (if any) cost and requires minimal maintainence.
 
 ---
 ## User Interaction View
