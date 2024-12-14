@@ -3,7 +3,7 @@
 ## Overview
 The **iNaturalist Weed Status Updater** is a user-friendly web app that helps users update weed status on iNaturalist effectively. It enables users to add other user's observations to the [Weed Management Aotearoa NZ](https://www.inaturalist.org/projects/weed-management-aotearoa-nz) iNaturalist project and update observation fields on their observations. This is not possible with the iNaturalist mobile app and is clunky to achieve through the iNaturalist website.
 
-While it has been developed for use with EcoNet's [CAMS](https://econet.nz/our-projects/) Weeds Map, it is more widely applicable for any system storing weed data in Aotearoa/New Zealand using iNaturalist.
+While it has been developed for use with EcoNet's [CAMS](https://econet.nz/our-projects/) Weeds Map, it is more widely applicable for any system storing weed data in Aotearoa/New Zealand using iNaturalist, or could be modified for other use cases to update iNaturalist via the API.
 
 ## How it works
 The user authenticates using their iNaturalist credentials. The authenticated user is then authorised to update the observation. The **iNaturalist Weed Status Updater** prompts the user for the weed status and details, then adds the selected observation to the [Weed Management Aotearoa NZ](https://www.inaturalist.org/projects/weed-management-aotearoa-nz) iNaturalist project and sets the observation field values using the supplied weed status and details.
@@ -11,7 +11,7 @@ The user authenticates using their iNaturalist credentials. The authenticated us
 ## Key Features
 - **OAuth2 Authentication**: Ensures secure access to iNaturalist accounts. iNaturalist stores user details with the updated observation fields.
 - **iNaturalist API Integration**: Modifies observation fields, such as weed control status, directly from the web app.
-- **Serverless implementation**: The solution uses Azure static web app and function app serverless components, so is at minimal (if any) cost and requires minimal maintainence.
+- **Serverless implementation**: The solution uses Azure static web app and function app serverless components, so is hosted at minimal (if any) cost and requires minimal maintainence.
 
 ---
 ## User Interaction View
@@ -69,8 +69,10 @@ sequenceDiagram
     function->>env: Read CLIENT_ID, CLIENT_SECRET,<br/> REDIRECT_URI variables
     function->>iNat: POST (CLIENT_ID, CLIENT_SECRET,<br/> REDIRECT_URI, auth_code)
     iNat-->>function: access_token
+    function->>iNat: POST (access_token, observation id, project id)
+    iNat-->>function: HTTP Response Code
     loop For each observation field value 
-        function->>iNat: POST (access_token, observation field value)
+        function->>iNat: POST (access_token, observation id, observation field id and value)
         iNat-->>function: HTTP Response Code
     end
     alt 500 on any response
@@ -98,11 +100,13 @@ Here's a description of the numbered steps on this sequence diagram:
 13. The Function App reads the CLIENT_ID, CLIENT_SECRET and REDIRECT_URI from the Azure environment variables.
 14. The Function App POSTs these variables and the authorization code to the iNaturalist OAuth2 endpoint.
 15. The iNaturalist OAuth2 endpoint responds with the access token.
-16. For each observation field value, the Function App POSTs the access token, observation field id and the observation field value to the **iNaturalist API**.
-17. iNaturalist responds with a response code (for each observation field value call).
-18. If any of these calls results in a **500** error response, the flow stops immediately. The Function App returns an error response code to the web page.
-19. If all of the calls result in a **200 OK** response, the Function App returns a success response to the web page.
-20. The web page displays either a success or failure message to the user dependent on which of the above two steps was executed.
+16. The Function App POSTs the access token, observation id and **Weed Management Aotearoa NZ** project to the **iNaturalist API** `project_observations` endpoint to add the observation to this project.
+17. iNaturalist responds with a response code.
+18. For each observation field value, the Function App POSTs the access token, observation id, observation field id and the observation field value to the **iNaturalist API** `observation_field_values` endpoint.
+19. iNaturalist responds with a response code (for each observation field value call).
+20. If any of these calls results in a **500** error response, the flow stops immediately. The Function App returns an error response code to the web page.
+21. If all of the calls result in a **200 OK** response, the Function App returns a success response to the web page.
+22. The web page displays either a success or failure message to the user dependent on which of the above two steps was executed.
 
 ## Creating your own custom iNaturalist updater
 Should you wish to clone and modify this project, you'll also need to:
