@@ -59,23 +59,23 @@ def update_observation_fields(json, access_token):
                 }
             }
         try:
-            if observation_id == 101972660:
-                data = {
-                    "observation": {
-                        "id": observation_id,
-                        "ofvs": [
-                            {
-                                "id": 12414,
-                                "value": 3
-                            }
-                        ]
-                    }
-                }
-                logging.info(f'Posting {data} to {'https://api.inaturalist.org/v1/observations/' + observation_id}')
+            # if observation_id == 101972660:
+            #     data = {
+            #         "observation": {
+            #             "id": observation_id,
+            #             "ofvs": [
+            #                 {
+            #                     "id": 12414,
+            #                     "value": 3
+            #                 }
+            #             ]
+            #         }
+            #     }
+            #     logging.info(f'Posting {data} to {'https://api.inaturalist.org/v1/observations/' + observation_id}')
 
-                response = requests.put('https://api.inaturalist.org/v1/observations/' + observation_id, json=data, headers=api_call_headers)
-            else:
-                response = requests.post(CREATE_OFV_URL, json=data, headers=api_call_headers)
+            #     response = requests.put('https://api.inaturalist.org/v1/observations/' + observation_id, json=data, headers=api_call_headers)
+            # else:
+            response = requests.post(CREATE_OFV_URL, json=data, headers=api_call_headers)
             response.raise_for_status()
         # except requests.exceptions.RequestException as e:
         #     logging.error(e)
