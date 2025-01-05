@@ -60,7 +60,19 @@ def update_observation_fields(json, access_token):
             }
         try:
             if observation_id == 101972660:
-                response = requests.put(CREATE_OFV_URL + '/' + observation_id, json=data, headers=api_call_headers)
+                data = {
+                    "observation": {
+                        "id": observation_id,
+                        "observation_fields": [
+                            {
+                                "id": 12414,
+                                "value": 3
+                            }
+                        ]
+                    }
+                }
+
+                response = requests.put('https://api.inaturalist.org/v1/observations/' + observation_id, json=data, headers=api_call_headers)
             else:
                 response = requests.post(CREATE_OFV_URL, json=data, headers=api_call_headers)
             response.raise_for_status()
