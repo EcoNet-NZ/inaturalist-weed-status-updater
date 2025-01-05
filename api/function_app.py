@@ -63,7 +63,7 @@ def update_observation_fields(json, access_token):
                 data = {
                     "observation": {
                         "id": observation_id,
-                        "observation_fields": [
+                        "ofvs": [
                             {
                                 "id": 12414,
                                 "value": 3
@@ -71,6 +71,7 @@ def update_observation_fields(json, access_token):
                         ]
                     }
                 }
+                logging.info(f'Posting {data} to {'https://api.inaturalist.org/v1/observations/' + observation_id}')
 
                 response = requests.put('https://api.inaturalist.org/v1/observations/' + observation_id, json=data, headers=api_call_headers)
             else:
