@@ -59,7 +59,7 @@ def update_observation_fields(json, access_token):
                 }
             }
         try:
-            if observation_id == 101972660:
+            if observation_id == '101972660':
                 data = {
                     "observation": {
                         "id": observation_id,
@@ -71,7 +71,7 @@ def update_observation_fields(json, access_token):
                         ]
                     }
                 }
-                logging.info(f'Posting to https://api.inaturalist.org/v1/observations/')
+                logging.info(f'Posting to https://api.inaturalist.org/v1/observations/{observation_id}')
 
                 response = requests.put('https://api.inaturalist.org/v1/observations/' + observation_id, json=data, headers=api_call_headers)
             else:
