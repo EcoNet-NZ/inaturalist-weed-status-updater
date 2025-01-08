@@ -15,6 +15,7 @@
     "vue": "^3.2.13"
   },
   "devDependencies": {
+    "@azure/static-web-apps-cli": "^2.0.2",
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
     "@vue/cli-plugin-babel": "~5.0.0",
