@@ -1,6 +1,6 @@
 <!--
 ====================================================================
-Copyright 2023 EcoNet.NZ
+Copyright 2024-2025 EcoNet.NZ
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ limitations under the License.
 <script setup>
 import AlertBox from './AlertBox';
 import Button from 'primevue/button';
-// import Calendar from 'primevue/calendar';
+import Calendar from 'primevue/calendar';
 import Dropdown from 'primevue/dropdown';
 import Fieldset from 'primevue/fieldset';
 import InputText from 'primevue/inputtext';
@@ -93,11 +93,10 @@ import RadioButton from 'primevue/radiobutton';
 
     </Fieldset>
 
-    <div v-if="controlled || alive" class="flex flex-column gap-3 mt-3">
+    <div v-if="controlled" class="flex flex-column gap-3 mt-3">
       <div class="pb-4 flex align-items-center gap-2">
-        <label for="follow-up-date" class="font-medium text-900 w-6rem">Follow-up Month</label>
-        <Dropdown v-model="followUpDate" :options="followUpDates" optionLabel="month" optionValue="month" class="p-2 border-1 border-300 border-round w-full" /> 
-        <!-- <Calendar id="follow-up-date" v-model="followUpDate" dateFormat="mm/yy" view="month" :minDate="today" class="w-full pl-3" /> -->
+        <label for="date-for-next-visit" class="font-medium text-900 w-6rem">Date for next visit</label>
+        <Calendar id="date-for-next-visit" v-model="dateForNextVisit" dateFormat="dd/mm/yy" :minDate="tomorrow" class="w-full pl-3" />
       </div>
     </div>
 
@@ -134,7 +133,8 @@ const OBSERVATION_FIELD_ID = {
   statusUpdate: 15795,
   dateOfStatusUpdate: 15796,
 
-  followUpDate: 14309
+  followUpDate: 14309,
+  dateForNextVisit: 18871
 }
 const ALIVE_FIELD_VALUE = 'Alive / Regrowth'
 const DEAD_FIELD_VALUE = 'Dead / Not Present' 
@@ -181,8 +181,8 @@ export default {
       initialSiteDifficulty: '',
       initialEffort: '',
       
-      followUpDate: null,
-      initialFollowUpDate: null,
+      dateForNextVisit: null,
+      initialDateForNextVisit: null,
 
       isLoading: false,
 
@@ -232,18 +232,6 @@ export default {
         { name: 'Three person hours',     code: '3 = Three person hours' },
         { name: 'Four person hours',      code: '4 = Four person hours' },
         { name: 'Five+ person hours',     code: '5 = Five+ person hours' },
-      ],
-      followUpDates: [
-        // { month: '2024-04' },
-        { month: '2024-05' },
-        { month: '2024-06' },
-        { month: '2024-09' },
-        { month: '2024-12' },
-        { month: '2025-03' },
-        { month: '2025-06' },
-        { month: '2025-09' },
-        { month: '2025-12' },
-        // { month: '2026-12' },
       ]
     };
   },
@@ -270,6 +258,9 @@ export default {
     isButtonDisabled() {
       return !!this.message || !this.allFieldsValid || this.isLoading
     },
+    tomorrow() {
+      return dayjs().add(1, 'day').startOf('day').toDate();  // Get tomorrow's date at midnight
+    }
   },
 
   created: async function() {
@@ -306,8 +297,17 @@ export default {
       this.siteDifficulty = this.getFieldValue(ofvs, 'siteDifficulty')
       this.effort = this.getFieldValue(ofvs, 'effort')
 
-      var fud = this.getFieldValue(ofvs, 'followUpDate')
-      if (fud && fud != '(undef.)') this.followUpDate = fud
+      this.dateForNextVisit = dayjs(this.getFieldValue(ofvs, 'dateForNextVisit')).toDate()
+      console.log('Date for next visit is ' + this.dateForNextVisit)
+      // Populate with legacy field value otherwise
+      if (!this.dateForNextVisit) {
+        const followUpMonth = this.getFieldValue(ofvs, 'followUpDate')
+        console.log('Follow up month is ' + followUpMonth)
+        if (followUpMonth && followUpMonth != '(undef.)') {
+          this.dateForNextVisit = dayjs(followUpMonth + '-01').toDate()
+          console.log('Date for next visit from follow up month is '+ this.dateForNextVisit)
+        }
+      }
 
       this.initialControlMethod = this.controlMethod
       this.initialTreatmentSubstance = this.treatmentSubstance
@@ -320,7 +320,7 @@ export default {
       this.initialSiteDifficulty = this.siteDifficulty
       this.initialEffort = this.effort
 
-      this.initialFollowUpDate = this.followUpDate
+      this.initialDateForNextVisit = this.dateForNextVisit
       
     } catch (error) {
       this.message = error + ", please report to kiaora@ombfree.nz."
@@ -347,7 +347,6 @@ export default {
         if (this.siteDifficulty     != this.initialSiteDifficulty)      fields[OBSERVATION_FIELD_ID['siteDifficulty']] = this.siteDifficulty
         if (this.effort             != this.initialEffort)              fields[OBSERVATION_FIELD_ID['effort']] = this.effort
         if (this.phenology          != this.initialPhenology)           fields[OBSERVATION_FIELD_ID['phenology']] = this.phenology
-        if (this.followUpDate       != this.initialFollowUpDate)        fields[OBSERVATION_FIELD_ID['followUpDate']] = this.monthOnly(this.followUpDate)
       }
       if (this.controlled) {
         var treated = this.fullyControlled == 'fully' ? 'Yes' : (this.fullyControlled == 'partially' ? 'Partially' : 'No')
@@ -356,6 +355,7 @@ export default {
         if (this.controlMethod      != this.initialControlMethod)       fields[OBSERVATION_FIELD_ID['howTreated']] = this.controlMethod
         if (this.treatmentSubstance != this.initialTreatmentSubstance)  fields[OBSERVATION_FIELD_ID['treatmentSubstance']] = this.treatmentSubstance
         if (this.treatmentDetails   != this.initialTreatmentDetails)    fields[OBSERVATION_FIELD_ID['treatmentDetails']] = this.treatmentDetails
+        if (this.dateForNextVisit   != this.initialDateForNextVisit)    fields[OBSERVATION_FIELD_ID['dateForNextVisit']] = this.dateForNextVisit
       } else {
         if (this.dateOfStatusUpdate)  fields[OBSERVATION_FIELD_ID['dateOfStatusUpdate']] = this.dateOfStatusUpdate
         if (this.alive)               fields[OBSERVATION_FIELD_ID['statusUpdate']] = ALIVE_FIELD_VALUE
@@ -411,9 +411,6 @@ export default {
         this.result = 'error'
         console.error('Error fetching data:', error)
       }
-    },
-    monthOnly(date) {
-      return dayjs(date).format('YYYY-MM')
     }
   }
 }
