@@ -138,6 +138,9 @@ Should you wish to clone and modify this project, you'll also need to:
 Construct the URL to start the flow at step 3 of the sequence diagram above. Given the `<client id>` from iNaturalist, the encoded URL (i.e. `https://` replaced with `https%3A%2F%2F`) of the Static Web App as `<redirect uri>` and the `<observation id>` of the observation you want to update, the URL will be:
 `https://www.inaturalist.org/oauth/authorize?client_id=<client id>&redirect_uri=<redirect uri>&response_type=code&state=<observation id>`
 
+### Running the application locally
+You can set up a local environment to run the application using the `swa` tool. See https://learn.microsoft.com/en-us/azure/static-web-apps/local-development for details. Running `swa start` will start the application locally. At this stage, I haven't had the function app working locally, this needs a bit more exploration of this documentation.
+
 ## Hints
 * `App.vue` contains the web app entry point and template, which then includes `iNaturalistUpdater` components.
 * In addition to the component layout, `iNaturalistUpdater.vue` also defines the Observation Field Values that are to be updated as well as options for dropdown values, validation logic etc.
