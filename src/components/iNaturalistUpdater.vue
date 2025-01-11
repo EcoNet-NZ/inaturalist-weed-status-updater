@@ -297,7 +297,10 @@ export default {
       this.siteDifficulty = this.getFieldValue(ofvs, 'siteDifficulty')
       this.effort = this.getFieldValue(ofvs, 'effort')
 
-      this.dateForNextVisit = dayjs(this.getFieldValue(ofvs, 'dateForNextVisit')).toDate()
+      const currentDateForNextVisit = this.getFieldValue(ofvs, 'dateForNextVisit')
+      if (currentDateForNextVisit) {
+        this.dateForNextVisit = dayjs(currentDateForNextVisit).toDate()
+      }
       console.log('Date for next visit is ' + this.dateForNextVisit)
       // Populate with legacy field value otherwise
       if (!this.dateForNextVisit) {
