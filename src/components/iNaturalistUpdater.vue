@@ -133,7 +133,7 @@ const OBSERVATION_FIELD_ID = {
   statusUpdate: 15795,
   dateOfStatusUpdate: 15796,
 
-  followUpDate: 14309,
+  followUpDate: 14309,    // deprecated
   dateForNextVisit: 18871
 }
 const ALIVE_FIELD_VALUE = 'Alive / Regrowth'
@@ -297,21 +297,6 @@ export default {
       this.siteDifficulty = this.getFieldValue(ofvs, 'siteDifficulty')
       this.effort = this.getFieldValue(ofvs, 'effort')
 
-      const currentDateForNextVisit = this.getFieldValue(ofvs, 'dateForNextVisit')
-      if (currentDateForNextVisit) {
-        this.dateForNextVisit = dayjs(currentDateForNextVisit).toDate()
-      }
-      console.log('Date for next visit is ' + this.dateForNextVisit)
-      // Populate with legacy field value otherwise
-      if (!this.dateForNextVisit) {
-        const followUpMonth = this.getFieldValue(ofvs, 'followUpDate')
-        console.log('Follow up month is ' + followUpMonth)
-        if (followUpMonth && followUpMonth != '(undef.)') {
-          this.dateForNextVisit = dayjs(followUpMonth + '-01').toDate()
-          console.log('Date for next visit from follow up month is '+ this.dateForNextVisit)
-        }
-      }
-
       this.initialControlMethod = this.controlMethod
       this.initialTreatmentSubstance = this.treatmentSubstance
       this.initialTreatmentDetails = this.treatmentDetails
@@ -323,8 +308,6 @@ export default {
       this.initialSiteDifficulty = this.siteDifficulty
       this.initialEffort = this.effort
 
-      this.initialDateForNextVisit = this.dateForNextVisit
-      
     } catch (error) {
       this.message = error + ", please report to kiaora@ombfree.nz."
       this.result = 'error'
