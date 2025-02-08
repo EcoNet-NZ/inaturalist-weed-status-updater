@@ -270,7 +270,10 @@ export default {
       return dayjs().add(1, 'day').startOf('day').toDate();  // Get tomorrow's date at midnight
     },
     formattedDateForNextVisit() {
-      return dayjs(this.dateForNextVisit).format('YYYY-MM-DD');
+      if (this.dateForNextVisit) {
+        return dayjs(this.dateForNextVisit).format('YYYY-MM-DD');
+      }
+      return null
     },
   },
 
