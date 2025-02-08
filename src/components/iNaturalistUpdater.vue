@@ -268,7 +268,10 @@ export default {
     },
     tomorrow() {
       return dayjs().add(1, 'day').startOf('day').toDate();  // Get tomorrow's date at midnight
-    }
+    },
+    formattedDateForNextVisit() {
+      return dayjs(this.dateForNextVisit).format('YYYY-MM-DD');
+    },
   },
 
   created: async function() {
@@ -316,6 +319,8 @@ export default {
       this.initialSiteDifficulty = this.siteDifficulty
       this.initialEffort = this.effort
 
+      this.initialDateForNextVisit = this.getFieldValue(ofvs, 'dateForNextVisit')  // Not populated on UI, but needed so blank value is saved
+
     } catch (error) {
       this.message = error + ", please report to kiaora@ombfree.nz."
       this.result = 'error'
@@ -349,7 +354,7 @@ export default {
         if (this.controlMethod      != this.initialControlMethod)       fields[OBSERVATION_FIELD_ID['howTreated']] = this.controlMethod
         if (this.treatmentSubstance != this.initialTreatmentSubstance)  fields[OBSERVATION_FIELD_ID['treatmentSubstance']] = this.treatmentSubstance
         if (this.treatmentDetails   != this.initialTreatmentDetails)    fields[OBSERVATION_FIELD_ID['treatmentDetails']] = this.treatmentDetails
-        if (this.dateForNextVisit   != this.initialDateForNextVisit)    fields[OBSERVATION_FIELD_ID['dateForNextVisit']] = this.dateForNextVisit
+        if (this.dateForNextVisit   != this.initialDateForNextVisit)    fields[OBSERVATION_FIELD_ID['dateForNextVisit']] = this.formattedDateForNextVisit
       } else {
         if (this.dateOfStatusUpdate)  fields[OBSERVATION_FIELD_ID['dateOfStatusUpdate']] = this.dateOfStatusUpdate
         if (this.alive)               fields[OBSERVATION_FIELD_ID['statusUpdate']] = ALIVE_FIELD_VALUE
