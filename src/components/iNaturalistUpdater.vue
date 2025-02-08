@@ -316,6 +316,8 @@ export default {
       this.initialSiteDifficulty = this.siteDifficulty
       this.initialEffort = this.effort
 
+      this.initialDateForNextVisit = this.getFieldValue(ofvs, 'dateForNextVisit')  // Not populated on UI, but needed so blank value is saved
+
     } catch (error) {
       this.message = error + ", please report to kiaora@ombfree.nz."
       this.result = 'error'
