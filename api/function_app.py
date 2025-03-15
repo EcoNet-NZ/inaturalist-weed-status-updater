@@ -19,7 +19,7 @@ import logging
 import os
 
 TOKEN_URL = 'https://www.inaturalist.org/oauth/token'
-CREATE_OFV_URL = 'https://api.inaturalist.org/v1/observation_field_values'
+OFV_URL = 'https://api.inaturalist.org/v1/observation_field_values'
 ADD_TO_PROJECT_URL = 'https://api.inaturalist.org/v1/project_observations'
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
@@ -50,6 +50,9 @@ def update_observation_fields(json, access_token):
 
     for key, value in json.items():
         if key != 'observationId':
+            if value is None:
+                value = ''
+
             logging.info(f'Updating {key} to {value}')
             data = {
                 "observation_field_value": {
@@ -58,15 +61,16 @@ def update_observation_fields(json, access_token):
                     "value": value
                 }
             }
-        try:
-            response = requests.post(CREATE_OFV_URL, json=data, headers=api_call_headers)
-            response.raise_for_status()
-        # except requests.exceptions.RequestException as e:
-        #     logging.error(e)
-        #     return func.HttpResponse(e, 500)
-        except Exception as e:
-            logging.error(e)
-            return func.HttpResponse(e, 500)
+
+            try:
+                response = requests.post(OFV_URL, json=data, headers=api_call_headers)
+                response.raise_for_status()
+            # except requests.exceptions.RequestException as e:
+            #     logging.error(e)
+            #     return func.HttpResponse(e, 500)
+            except Exception as e:
+                logging.error(e)
+                return func.HttpResponse(e, 500)
 
     return func.HttpResponse(f"Yay! The iNaturalist observation was updated {response}!")
 
