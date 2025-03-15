@@ -361,7 +361,7 @@ export default {
         if (this.treatmentSubstance != this.initialTreatmentSubstance)  fields[OBSERVATION_FIELD_ID['treatmentSubstance']] = this.treatmentSubstance
         if (this.treatmentDetails   != this.initialTreatmentDetails)    fields[OBSERVATION_FIELD_ID['treatmentDetails']] = this.treatmentDetails
         if (this.dateForNextVisit   != this.initialDateForNextVisit)    fields[OBSERVATION_FIELD_ID['dateForNextVisit']] = this.formattedDateForNextVisit
-        if (this.initialDeprecatedDateForNextVisit)                     fields[OBSERVATION_FIELD_ID['deprecatedDateForNextVisit']] = null // Always delete if set
+        if (this.initialDeprecatedDateForNextVisit)                     fields[OBSERVATION_FIELD_ID['deprecatedDateForNextVisit']] = "" // Always delete if set
       } else {
         if (this.dateOfStatusUpdate)  fields[OBSERVATION_FIELD_ID['dateOfStatusUpdate']] = this.dateOfStatusUpdate
         if (this.alive)               fields[OBSERVATION_FIELD_ID['statusUpdate']] = ALIVE_FIELD_VALUE
