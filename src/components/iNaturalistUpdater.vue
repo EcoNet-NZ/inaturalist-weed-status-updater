@@ -134,7 +134,8 @@ const OBSERVATION_FIELD_ID = {
   dateOfStatusUpdate: 15796,
 
   followUpDate: 14309,    // deprecated
-  dateForNextVisit: 18871
+  dateForNextVisit: 18871,
+  deprecatedDateForNextVisit: 14309
 }
 const ALIVE_FIELD_VALUE = 'Alive / Regrowth'
 const DEAD_FIELD_VALUE = 'Dead / Not Present' 
@@ -183,6 +184,7 @@ export default {
       
       dateForNextVisit: null,
       initialDateForNextVisit: null,
+      initialDeprecatedDateForNextVisit: null,
 
       isLoading: false,
 
@@ -323,6 +325,7 @@ export default {
       this.initialEffort = this.effort
 
       this.initialDateForNextVisit = this.getFieldValue(ofvs, 'dateForNextVisit')  // Not populated on UI, but needed so blank value is saved
+      this.initialDeprecatedDateForNextVisit = this.getFieldValue(ofvs, 'deprecatedDateForNextVisit')  // Not populated on UI, but needed so blank value is saved
 
     } catch (error) {
       this.message = error + ", please report to kiaora@ombfree.nz."
@@ -358,6 +361,7 @@ export default {
         if (this.treatmentSubstance != this.initialTreatmentSubstance)  fields[OBSERVATION_FIELD_ID['treatmentSubstance']] = this.treatmentSubstance
         if (this.treatmentDetails   != this.initialTreatmentDetails)    fields[OBSERVATION_FIELD_ID['treatmentDetails']] = this.treatmentDetails
         if (this.dateForNextVisit   != this.initialDateForNextVisit)    fields[OBSERVATION_FIELD_ID['dateForNextVisit']] = this.formattedDateForNextVisit
+        if (this.initialDeprecatedDateForNextVisit)                     fields[OBSERVATION_FIELD_ID['deprecatedDateForNextVisit']] = null // Always delete if set
       } else {
         if (this.dateOfStatusUpdate)  fields[OBSERVATION_FIELD_ID['dateOfStatusUpdate']] = this.dateOfStatusUpdate
         if (this.alive)               fields[OBSERVATION_FIELD_ID['statusUpdate']] = ALIVE_FIELD_VALUE
