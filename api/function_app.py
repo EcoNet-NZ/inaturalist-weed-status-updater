@@ -50,7 +50,7 @@ def update_observation_fields(json, access_token):
 
     for key, value in json.items():
         if key != 'observationId':
-            if value is None:
+            if key == 18871 and value is None:  # Reset date for next visit
                 value = ''
 
             logging.info(f'Updating {key} to {value}')
