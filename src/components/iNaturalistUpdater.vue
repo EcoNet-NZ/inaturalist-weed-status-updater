@@ -360,7 +360,7 @@ export default {
         if (this.controlMethod      != this.initialControlMethod)       fields[OBSERVATION_FIELD_ID['howTreated']] = this.controlMethod
         if (this.treatmentSubstance != this.initialTreatmentSubstance)  fields[OBSERVATION_FIELD_ID['treatmentSubstance']] = this.treatmentSubstance
         if (this.treatmentDetails   != this.initialTreatmentDetails)    fields[OBSERVATION_FIELD_ID['treatmentDetails']] = this.treatmentDetails
-        if (this.dateForNextVisit   != this.initialDateForNextVisit)    fields[OBSERVATION_FIELD_ID['dateForNextVisit']] = this.formattedDateForNextVisit
+        if (this.formattedDateForNextVisitdateForNextVisit != this.initialDateForNextVisit)    fields[OBSERVATION_FIELD_ID['dateForNextVisit']] = this.formattedDateForNextVisit
         if (this.initialDeprecatedDateForNextVisit && this.initialDeprecatedDateForNextVisit != "(undef.)") fields[OBSERVATION_FIELD_ID['deprecatedDateForNextVisit']] = "(undef.)" // Always delete if set
       } else {
         if (this.dateOfStatusUpdate)  fields[OBSERVATION_FIELD_ID['dateOfStatusUpdate']] = this.dateOfStatusUpdate
